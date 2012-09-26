@@ -1,4 +1,3 @@
-swiftmailer-docs-ru
+Русская документация Swift Mailer
 ===================
 
-Русская документация Swift Mailer
