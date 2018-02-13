@@ -1,0 +1,95 @@
+#downloadadmin {
+    margin: 0;
+    width: 100%;
+}
+
+.stabledownload {
+  margin: 40px;
+  padding: 20px;
+  background-color: #a2ea47;
+  font-size: 1.1em;
+  float: left;
+}
+
+.stabledownload img {
+  float: left;
+  margin-right: 15px;
+}
+
+.stabledownload .downloadinfo {
+  float: right;
+  width: 100%;
+  margin-left: -79px;
+}
+
+.stabledownload dl {
+  margin-bottom: 0;
+  padding-left: 79px;
+}
+
+.stabledownload dt,
+.stabledownload dd {
+  clear: both;
+}
+
+.stabledownload dl dt.filename {
+  float: left;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  font-size: 1.3em;
+}
+
+.stabledownload dl dd.filename {
+  float: left;
+  clear: none;
+  margin-bottom: 1em;
+  font-size: 1.3em;
+}
+
+.stabledownload dl dt.filename a,
+.stabledownload dl dd.filename a {
+  color: #111;
+  text-decoration: none;
+}
+
+.stabledownload dl dt.filename a:hover,
+.stabledownload dl dd.filename a:hover {
+  text-decoration: underline;
+}
+
+.stabledownload dl dt.description,
+.stabledownload dl dt.download {
+  display: none;
+}
+
+.stabledownload dl dd.description {
+  color: #333;
+  margin-bottom: 1em;
+}
+
+.stabledownload dl dt.releasedate,
+.stabledownload dl dt.filesize {
+  float: left;
+  width: 120px;
+}
+
+.stabledownload dl dd.releasedate,
+.stabledownload dl dd.filesize {
+  clear: none;
+}
+
+.stabledownload dl dt.filesize,
+.stabledownload dl dd.filesize,
+.stabledownload dl dt.releasedate,
+.stabledownload dl dd.releasedate {
+  color: #222;
+}
+
+.stabledownload dl dd.download {
+  float: right;
+}
+
+.stabledownload dl dd.download a {
+  color: #111;
+  font-size: 1.2em;
+}

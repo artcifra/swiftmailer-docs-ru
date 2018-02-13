@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+    <head>
+        <meta name="keywords" content="swift mailer, swiftmailer, swiftmail, php mailer, phpmailer, oop mailer, bulk emailing" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <link href="../css/global.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/homepage.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/download.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/documentation.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/pygments.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/code.css" media="screen" rel="stylesheet" type="text/css" />
+
+        <title>Using Swift Mailer for Japanese Emails &#8211; Documentation &#8211; Swift Mailer</title>
+
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+        </script>
+  </head>
+  <body>
+  <a href="https://github.com/ruden/swiftmailer-docs-ru"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
+    <div id="layoutcontainer">
+      
+    <div id="layout">
+      
+      <div id="header" class="corners top right left">
+        <div id="headercontent">
+          <img id="logo" src="../images/logo.png" alt="Swift Mailer" />
+          
+          <div id="navigation">
+            <ul>
+              <li><a href="/swiftmailer-docs-ru/">Главная</a></li>
+              <li><a href="/swiftmailer-docs-ru/download.html">Установка</a></li>
+              <li><a href="/swiftmailer-docs-ru/docs/introduction.html">Документация</a></li>
+              <li><a href="/swiftmailer-docs-ru/bugs.html">Ошибки</a></li>
+              <li class="tab corners top right left"><a class="download-file" href="/swiftmailer-docs-ru/download.html">текущий 6.0.2</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="wrapper" class="corners bottom right left">
+
+          <div>
+              <div id="container">
+                  <div id="content">
+                          <div id="doc" class="body-web">
+        <div class="section" id="using-swift-mailer-for-japanese-emails">
+<h1>Using Swift Mailer for Japanese Emails<a class="headerlink" href="#using-swift-mailer-for-japanese-emails" title="Permalink to this headline">¶</a></h1>
+<p>To send emails in Japanese, you need to tweak the default configuration.</p>
+<p>Call the <code class="notranslate">Swift::init()</code> method with the following code as early as possible
+in your code:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nx">Swift</span><span class="o">::</span><span class="na">init</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Swift_DependencyContainer</span><span class="o">::</span><span class="na">getInstance</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="s1">&#39;mime.qpheaderencoder&#39;</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">asAliasOf</span><span class="p">(</span><span class="s1">&#39;mime.base64headerencoder&#39;</span><span class="p">);</span>
+
+    <span class="nx">Swift_Preferences</span><span class="o">::</span><span class="na">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">setCharset</span><span class="p">(</span><span class="s1">&#39;iso-2022-jp&#39;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="cm">/* rest of code goes here */</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>That's all!</p>
+</div>
+
+    </div>
+
+            <div class="navigation">
+                            <a accesskey="P" title="Plugins" href="plugins.html">
+                    &laquo;&nbsp;Plugins
+                </a>
+                                            </div>
+                      </div>
+              </div>
+          </div>
+
+          <div id="sidepanel">
+                  <div id="topicmap" class="supplementary secondary">
+        <div class="clearfix">
+            <p>&laquo;&nbsp;<a href="/docs/index.html">Table of Contents</a></p>
+
+            <div class="offline-docs">
+
+                You can download the documentation for offline reading:
+
+                <ul>
+                    <li><a id="book-pdf" href="/pdf/Swiftmailer.pdf"><img src="images/pdficon.png" alt="PDF" /></a></li>
+                    <li><a id="book-epub" href="/epub/Swiftmailer.epub"><img src="images/epubicon.png" alt="EPUB" /></a></li>
+                </ul>
+
+            </div>
+
+            
+            <div class="infobar-box">
+                <h3>Questions &amp; Feedback</h3>
+                <div class="feedback">
+                    <p>
+                      <strong>Found a typo or an error?</strong><br />
+                      Open a <a href="https://github.com/swiftmailer/swiftmailer/issues">ticket</a>.
+                    </p>
+                    <p>
+                      <strong>Need support or have a technical question?</strong><br />
+                      Ask support on <a href="https://stackoverflow.com/">Stack Overflow</a>.
+                     </p>
+                </div>
+
+                <h3>License</h3>
+                <div id="license">
+                    <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" src="https://symfony.com/images/license.png" /></a>
+                    Swiftmailer <span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" rel="dc:type">documentation</span> is licensed under a
+                    Creative Commons Attribution-Share Alike 3.0
+                    Unported <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/">License</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+          </div>
+
+        <div id="footer">
+          <div id="footercontent">
+            
+            <div id="about">
+            </div>
+        
+        <div id="support">
+          
+          <dl class="getstarted">
+            <dt>Get Started</dt>
+            <dd>
+              <ul>
+                <li><a href="/download">Download</a></li>
+                <!--<li>Tutorials</li>-->
+                <li><a href="/docs/introduction.html">User Guide &amp; Book</a></li>
+              </ul>
+            </dd>
+          </dl>
+
+          <dl class="related">
+            <dt>Get Help</dt>
+            <dd>
+              <ul>
+                <li><a href="/docs/introduction.html">Documentation</a></li>
+                <li><a href="/bugs">Report a Bug</a></li>
+                <li><a href="https://groups.google.com/group/swiftmailer">Google Group</a></li>
+              </ul>
+            </dd>
+          </dl>
+
+            </div>
+            
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+    </div>
+  </body>
+</html>

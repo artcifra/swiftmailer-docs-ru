@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+    <head>
+        <meta name="keywords" content="swift mailer, swiftmailer, swiftmail, php mailer, phpmailer, oop mailer, bulk emailing" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <link href="../css/global.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/homepage.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/download.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/documentation.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/pygments.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/code.css" media="screen" rel="stylesheet" type="text/css" />
+
+        <title>Sending Messages &#8211; Documentation &#8211; Swift Mailer</title>
+
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+        </script>
+  </head>
+  <body>
+  <a href="https://github.com/ruden/swiftmailer-docs-ru"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
+    <div id="layoutcontainer">
+      
+    <div id="layout">
+      
+      <div id="header" class="corners top right left">
+        <div id="headercontent">
+          <img id="logo" src="../images/logo.png" alt="Swift Mailer" />
+          
+          <div id="navigation">
+            <ul>
+              <li><a href="/swiftmailer-docs-ru/">Главная</a></li>
+              <li><a href="/swiftmailer-docs-ru/download.html">Установка</a></li>
+              <li><a href="/swiftmailer-docs-ru/docs/introduction.html">Документация</a></li>
+              <li><a href="/swiftmailer-docs-ru/bugs.html">Ошибки</a></li>
+              <li class="tab corners top right left"><a class="download-file" href="/swiftmailer-docs-ru/download.html">текущий 6.0.2</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="wrapper" class="corners bottom right left">
+
+          <div>
+              <div id="container">
+                  <div id="content">
+                          <div id="doc" class="body-web">
+        <div class="section" id="sending-messages">
+<h1>Sending Messages<a class="headerlink" href="#sending-messages" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="quick-reference-for-sending-a-message">
+<h2>Quick Reference for Sending a Message<a class="headerlink" href="#quick-reference-for-sending-a-message" title="Permalink to this headline">¶</a></h2>
+<p>Sending a message is very straightforward. You create a Transport, use it to
+create the Mailer, then you use the Mailer to send the message.</p>
+<p>When using <code class="notranslate">send()</code> the message will be sent just like it would be sent if
+you used your mail client. An integer is returned which includes the number of
+successful recipients. If none of the recipients could be sent to then zero
+will be returned, which equates to a boolean <code class="notranslate">false</code>. If you set two <code class="notranslate">To:</code>
+recipients and three <code class="notranslate">Bcc:</code> recipients in the message and all of the
+recipients are delivered to successfully then the value 5 will be returned:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the Transport</span>
+<span class="nv">$transport</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Swift_SmtpTransport</span><span class="p">(</span><span class="s1">&#39;smtp.example.org&#39;</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+  <span class="o">-&gt;</span><span class="na">setUsername</span><span class="p">(</span><span class="s1">&#39;your username&#39;</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">setPassword</span><span class="p">(</span><span class="s1">&#39;your password&#39;</span><span class="p">)</span>
+  <span class="p">;</span>
+
+<span class="cm">/*</span>
+<span class="cm">You could alternatively use a different transport such as Sendmail:</span>
+
+<span class="cm">// Sendmail</span>
+<span class="cm">$transport = new Swift_SendmailTransport(&#39;/usr/sbin/sendmail -bs&#39;);</span>
+<span class="cm">*/</span>
+
+<span class="c1">// Create the Mailer using your created Transport</span>
+<span class="nv">$mailer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Mailer</span><span class="p">(</span><span class="nv">$transport</span><span class="p">);</span>
+
+<span class="c1">// Create a message</span>
+<span class="nv">$message</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">(</span><span class="s1">&#39;Wonderful Subject&#39;</span><span class="p">))</span>
+  <span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">([</span><span class="s1">&#39;john@doe.com&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;John Doe&#39;</span><span class="p">])</span>
+  <span class="o">-&gt;</span><span class="na">setTo</span><span class="p">([</span><span class="s1">&#39;receiver@domain.org&#39;</span><span class="p">,</span> <span class="s1">&#39;other@domain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;A name&#39;</span><span class="p">])</span>
+  <span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">&#39;Here is the message itself&#39;</span><span class="p">)</span>
+  <span class="p">;</span>
+
+<span class="c1">// Send the message</span>
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$mailer</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$message</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+<div class="section" id="transport-types">
+<h3>Transport Types<a class="headerlink" href="#transport-types" title="Permalink to this headline">¶</a></h3>
+<p>Transports are the classes in Swift Mailer that are responsible for
+communicating with a service in order to deliver a Message. There are several
+types of Transport in Swift Mailer, all of which implement the
+<code class="notranslate">Swift_Transport</code> interface:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="sb">``</span><span class="nx">Swift_SmtpTransport</span><span class="sb">``</span><span class="o">:</span> <span class="nx">Sends</span> <span class="nx">messages</span> <span class="nx">over</span> <span class="nx">SMTP</span><span class="p">;</span> <span class="nx">Supports</span> <span class="nx">Authentication</span><span class="p">;</span>
+</pre></div>
+</div></div>
+<blockquote>
+<div>Supports Encryption. Very portable; Pleasingly predictable results; Provides
+good feedback;</div></blockquote>
+<ul class="simple">
+<li><code class="notranslate">Swift_SendmailTransport</code>: Communicates with a locally installed
+<code class="notranslate">sendmail</code> executable (Linux/UNIX). Quick time-to-run; Provides
+less-accurate feedback than SMTP; Requires <code class="notranslate">sendmail</code> installation;</li>
+<li><code class="notranslate">Swift_LoadBalancedTransport</code>: Cycles through a collection of the other
+Transports to manage load-reduction. Provides graceful fallback if one
+Transport fails (e.g. an SMTP server is down); Keeps the load on remote
+services down by spreading the work;</li>
+<li><code class="notranslate">Swift_FailoverTransport</code>: Works in conjunction with a collection of the
+other Transports to provide high-availability. Provides graceful fallback if
+one Transport fails (e.g. an SMTP server is down).</li>
+</ul>
+<div class="section" id="the-smtp-transport">
+<h4>The SMTP Transport<a class="headerlink" href="#the-smtp-transport" title="Permalink to this headline">¶</a></h4>
+<p>The SMTP Transport sends messages over the (standardized) Simple Message
+Transfer Protocol. It can deal with encryption and authentication.</p>
+<p>The SMTP Transport, <code class="notranslate">Swift_SmtpTransport</code> is without doubt the most commonly
+used Transport because it will work on 99% of web servers (I just made that
+number up, but you get the idea). All the server needs is the ability to
+connect to a remote (or even local) SMTP server on the correct port number
+(usually 25).</p>
+<p>SMTP servers often require users to authenticate with a username and password
+before any mail can be sent to other domains. This is easily achieved using
+Swift Mailer with the SMTP Transport.</p>
+<p>SMTP is a protocol -- in other words it's a &quot;way&quot; of communicating a job to be
+done (i.e. sending a message). The SMTP protocol is the fundamental basis on
+which messages are delivered all over the internet 7 days a week, 365 days a
+year. For this reason it's the most &quot;direct&quot; method of sending messages you can
+use and it's the one that will give you the most power and feedback (such as
+delivery failures) when using Swift Mailer.</p>
+<p>Because SMTP is generally run as a remote service (i.e. you connect to it over
+the network/internet) it's extremely portable from server-to-server. You can
+easily store the SMTP server address and port number in a configuration file
+within your application and adjust the settings accordingly if the code is
+moved or if the SMTP server is changed.</p>
+<p>Some SMTP servers -- Google for example -- use encryption for security reasons.
+Swift Mailer supports using both SSL and TLS encryption settings.</p>
+<div class="section" id="using-the-smtp-transport">
+<h5>Using the SMTP Transport<a class="headerlink" href="#using-the-smtp-transport" title="Permalink to this headline">¶</a></h5>
+<p>The SMTP Transport is easy to use. Most configuration options can be set with
+the constructor.</p>
+<p>To use the SMTP Transport you need to know which SMTP server your code needs to
+connect to. Ask your web host if you're not sure. Lots of people ask me who to
+connect to -- I really can't answer that since it's a setting that's extremely
+specific to your hosting environment.</p>
+<p>A connection to the SMTP server will be established upon the first call to
+<code class="notranslate">send()</code>:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the Transport</span>
+<span class="nv">$transport</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_SmtpTransport</span><span class="p">(</span><span class="s1">&#39;smtp.example.org&#39;</span><span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+
+<span class="c1">// Create the Mailer using your created Transport</span>
+<span class="nv">$mailer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Mailer</span><span class="p">(</span><span class="nv">$transport</span><span class="p">);</span>
+
+<span class="cm">/*</span>
+<span class="cm">It&#39;s also possible to use multiple method calls</span>
+
+<span class="cm">$transport = (new Swift_SmtpTransport())</span>
+<span class="cm">  -&gt;setHost(&#39;smtp.example.org&#39;)</span>
+<span class="cm">  -&gt;setPort(25)</span>
+<span class="cm">  ;</span>
+<span class="cm">*/</span>
+</pre></div>
+</td></tr></table></div></div>
+</div>
+<div class="section" id="encrypted-smtp">
+<h5>Encrypted SMTP<a class="headerlink" href="#encrypted-smtp" title="Permalink to this headline">¶</a></h5>
+<p>You can use SSL or TLS encryption with the SMTP Transport by specifying it as a
+parameter or with a method call:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the Transport</span>
+<span class="nv">$transport</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_SmtpTransport</span><span class="p">(</span><span class="s1">&#39;smtp.example.org&#39;</span><span class="p">,</span> <span class="mi">587</span><span class="p">,</span> <span class="s1">&#39;ssl&#39;</span><span class="p">);</span>
+
+<span class="c1">// Create the Mailer using your created Transport</span>
+<span class="nv">$mailer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Mailer</span><span class="p">(</span><span class="nv">$transport</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>A connection to the SMTP server will be established upon the first call to
+<code class="notranslate">send()</code>. The connection will be initiated with the correct encryption
+settings.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">For SSL or TLS encryption to work your PHP installation must have
+appropriate OpenSSL transports wrappers. You can check if &quot;tls&quot; and/or
+&quot;ssl&quot; are present in your PHP installation by using the PHP function
+<code class="notranslate">stream_get_transports()</code>.</p>
+</div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">If you are using <a class="reference external" href="https://mailcatcher.me/">Mailcatcher</a>, make sure you do not set the encryption
+for the <code class="notranslate">Swift_SmtpTransport</code>, since Mailcatcher does not support encryption.</p>
+</div></div>
+</div>
+<div class="section" id="smtp-with-a-username-and-password">
+<h5>SMTP with a Username and Password<a class="headerlink" href="#smtp-with-a-username-and-password" title="Permalink to this headline">¶</a></h5>
+<p>Some servers require authentication. You can provide a username and password
+with <code class="notranslate">setUsername()</code> and <code class="notranslate">setPassword()</code> methods:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the Transport the call setUsername() and setPassword()</span>
+<span class="nv">$transport</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Swift_SmtpTransport</span><span class="p">(</span><span class="s1">&#39;smtp.example.org&#39;</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+  <span class="o">-&gt;</span><span class="na">setUsername</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">setPassword</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+  <span class="p">;</span>
+
+<span class="c1">// Create the Mailer using your created Transport</span>
+<span class="nv">$mailer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Mailer</span><span class="p">(</span><span class="nv">$transport</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>Your username and password will be used to authenticate upon first connect when
+<code class="notranslate">send()</code> are first used on the Mailer.</p>
+<p>If authentication fails, an Exception of type <code class="notranslate">Swift_TransportException</code> will
+be thrown.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">If you need to know early whether or not authentication has failed and an
+Exception is going to be thrown, call the <code class="notranslate">start()</code> method on the
+created Transport.</p>
+</div></div>
+</div>
+</div>
+<div class="section" id="the-sendmail-transport">
+<h4>The Sendmail Transport<a class="headerlink" href="#the-sendmail-transport" title="Permalink to this headline">¶</a></h4>
+<p>The Sendmail Transport sends messages by communicating with a locally installed
+MTA -- such as <code class="notranslate">sendmail</code>.</p>
+<p>The Sendmail Transport, <code class="notranslate">Swift_SendmailTransport</code> does not directly connect
+to any remote services. It is designed for Linux servers that have <code class="notranslate">sendmail</code>
+installed. The Transport starts a local <code class="notranslate">sendmail</code> process and sends messages
+to it. Usually the <code class="notranslate">sendmail</code> process will respond quickly as it spools your
+messages to disk before sending them.</p>
+<p>The Transport is named the Sendmail Transport for historical reasons
+(<code class="notranslate">sendmail</code> was the &quot;standard&quot; UNIX tool for sending e-mail for years). It
+will send messages using other transfer agents such as Exim or Postfix despite
+its name, provided they have the relevant sendmail wrappers so that they can be
+started with the correct command-line flags.</p>
+<p>It's a common misconception that because the Sendmail Transport returns a
+result very quickly it must therefore deliver messages to recipients quickly --
+this is not true. It's not slow by any means, but it's certainly not faster
+than SMTP when it comes to getting messages to the intended recipients. This is
+because sendmail itself sends the messages over SMTP once they have been
+quickly spooled to disk.</p>
+<p>The Sendmail Transport has the potential to be just as smart of the SMTP
+Transport when it comes to notifying Swift Mailer about which recipients were
+rejected, but in reality the majority of locally installed <code class="notranslate">sendmail</code>
+instances are not configured well enough to provide any useful feedback. As
+such Swift Mailer may report successful deliveries where they did in fact fail
+before they even left your server.</p>
+<p>You can run the Sendmail Transport in two different modes specified by command
+line flags:</p>
+<ul class="simple">
+<li>&quot;<code class="notranslate">-bs</code>&quot; runs in SMTP mode so theoretically it will act like the SMTP
+Transport</li>
+<li>&quot;<code class="notranslate">-t</code>&quot; runs in piped mode with no feedback, but theoretically faster,
+though not advised</li>
+</ul>
+<p>You can think of the Sendmail Transport as a sort of asynchronous SMTP
+Transport -- though if you have problems with delivery failures you should try
+using the SMTP Transport instead. Swift Mailer isn't doing the work here, it's
+simply passing the work to somebody else (i.e. <code class="notranslate">sendmail</code>).</p>
+<div class="section" id="using-the-sendmail-transport">
+<h5>Using the Sendmail Transport<a class="headerlink" href="#using-the-sendmail-transport" title="Permalink to this headline">¶</a></h5>
+<p>To use the Sendmail Transport you simply need to call <code class="notranslate">new
+Swift_SendmailTransport()</code> with the command as a parameter.</p>
+<p>To use the Sendmail Transport you need to know where <code class="notranslate">sendmail</code> or another
+MTA exists on the server. Swift Mailer uses a default value of
+<code class="notranslate">/usr/sbin/sendmail</code>, which should work on most systems.</p>
+<p>You specify the entire command as a parameter (i.e. including the command line
+flags). Swift Mailer supports operational modes of &quot;<code class="notranslate">-bs</code>&quot; (default) and
+&quot;<code class="notranslate">-t</code>&quot;.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">If you run sendmail in &quot;<code class="notranslate">-t</code>&quot; mode you will get no feedback as to whether
+or not sending has succeeded. Use &quot;<code class="notranslate">-bs</code>&quot; unless you have a reason not to.</p>
+</div></div>
+<p>A sendmail process will be started upon the first call to <code class="notranslate">send()</code>. If the
+process cannot be started successfully an Exception of type
+<code class="notranslate">Swift_TransportException</code> will be thrown:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the Transport</span>
+<span class="nv">$transport</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_SendmailTransport</span><span class="p">(</span><span class="s1">&#39;/usr/sbin/exim -bs&#39;</span><span class="p">);</span>
+
+<span class="c1">// Create the Mailer using your created Transport</span>
+<span class="nv">$mailer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Mailer</span><span class="p">(</span><span class="nv">$transport</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="available-methods-for-sending-messages">
+<h3>Available Methods for Sending Messages<a class="headerlink" href="#available-methods-for-sending-messages" title="Permalink to this headline">¶</a></h3>
+<p>The Mailer class offers one method for sending Messages -- <code class="notranslate">send()</code>.</p>
+<p>When a message is sent in Swift Mailer, the Mailer class communicates with
+whichever Transport class you have chosen to use.</p>
+<p>Each recipient in the message should either be accepted or rejected by the
+Transport. For example, if the domain name on the email address is not
+reachable the SMTP Transport may reject the address because it cannot process
+it. <code class="notranslate">send()</code> will return an integer indicating the number of accepted
+recipients.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">It's possible to find out which recipients were rejected -- we'll cover that
+later in this chapter.</p>
+</div></div>
+<div class="section" id="using-the-send-method">
+<h4>Using the <code class="notranslate">send()</code> Method<a class="headerlink" href="#using-the-send-method" title="Permalink to this headline">¶</a></h4>
+<p>The <code class="notranslate">send()</code> method of the <code class="notranslate">Swift_Mailer</code> class sends a message using
+exactly the same logic as your Desktop mail client would use. Just pass it a
+Message and get a result.</p>
+<p>The message will be sent just like it would be sent if you used your mail
+client. An integer is returned which includes the number of successful
+recipients. If none of the recipients could be sent to then zero will be
+returned, which equates to a boolean <code class="notranslate">false</code>. If you set two
+<code class="notranslate">To:</code> recipients and three <code class="notranslate">Bcc:</code> recipients in the message and all of the
+recipients are delivered to successfully then the value 5 will be returned:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the Transport</span>
+<span class="nv">$transport</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_SmtpTransport</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+
+<span class="c1">// Create the Mailer using your created Transport</span>
+<span class="nv">$mailer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Mailer</span><span class="p">(</span><span class="nv">$transport</span><span class="p">);</span>
+
+<span class="c1">// Create a message</span>
+<span class="nv">$message</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">(</span><span class="s1">&#39;Wonderful Subject&#39;</span><span class="p">))</span>
+  <span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">([</span><span class="s1">&#39;john@doe.com&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;John Doe&#39;</span><span class="p">])</span>
+  <span class="o">-&gt;</span><span class="na">setTo</span><span class="p">([</span><span class="s1">&#39;receiver@domain.org&#39;</span><span class="p">,</span> <span class="s1">&#39;other@domain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;A name&#39;</span><span class="p">])</span>
+  <span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">&#39;Here is the message itself&#39;</span><span class="p">)</span>
+  <span class="p">;</span>
+
+<span class="c1">// Send the message</span>
+<span class="nv">$numSent</span> <span class="o">=</span> <span class="nv">$mailer</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$message</span><span class="p">);</span>
+
+<span class="nb">printf</span><span class="p">(</span><span class="s2">&quot;Sent %d messages</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$numSent</span><span class="p">);</span>
+
+<span class="cm">/* Note that often that only the boolean equivalent of the</span>
+<span class="cm">   return value is of concern (zero indicates FALSE)</span>
+
+<span class="cm">if ($mailer-&gt;send($message))</span>
+<span class="cm">{</span>
+<span class="cm">  echo &quot;Sent\n&quot;;</span>
+<span class="cm">}</span>
+<span class="cm">else</span>
+<span class="cm">{</span>
+<span class="cm">  echo &quot;Failed\n&quot;;</span>
+<span class="cm">}</span>
+
+<span class="cm">*/</span>
+</pre></div>
+</td></tr></table></div></div>
+</div>
+<div class="section" id="sending-emails-in-batch">
+<h4>Sending Emails in Batch<a class="headerlink" href="#sending-emails-in-batch" title="Permalink to this headline">¶</a></h4>
+<p>If you want to send a separate message to each recipient so that only their own
+address shows up in the <code class="notranslate">To:</code> field, follow the following recipe:</p>
+<ul class="simple">
+<li>Create a Transport from one of the provided Transports --
+<code class="notranslate">Swift_SmtpTransport</code>, <code class="notranslate">Swift_SendmailTransport</code>,
+or one of the aggregate Transports.</li>
+<li>Create an instance of the <code class="notranslate">Swift_Mailer</code> class, using the Transport as
+it's constructor parameter.</li>
+<li>Create a Message.</li>
+<li>Iterate over the recipients and send message via the <code class="notranslate">send()</code> method on
+the Mailer object.</li>
+</ul>
+<p>Each recipient of the messages receives a different copy with only their own
+email address on the <code class="notranslate">To:</code> field.</p>
+<p>Make sure to add only valid email addresses as recipients. If you try to add an
+invalid email address with <code class="notranslate">setTo()</code>, <code class="notranslate">setCc()</code> or <code class="notranslate">setBcc()</code>, Swift
+Mailer will throw a <code class="notranslate">Swift_RfcComplianceException</code>.</p>
+<p>If you add recipients automatically based on a data source that may contain
+invalid email addresses, you can prevent possible exceptions by validating the
+addresses using <code class="notranslate">Swift_Validate::email($email)</code> and only adding addresses
+that validate. Another way would be to wrap your <code class="notranslate">setTo()</code>, <code class="notranslate">setCc()</code> and
+<code class="notranslate">setBcc()</code> calls in a try-catch block and handle the
+<code class="notranslate">Swift_RfcComplianceException</code> in the catch block.</p>
+<p>Handling invalid addresses properly is especially important when sending emails
+in large batches since a single invalid address might cause an unhandled
+exception and stop the execution or your script early.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p>In the following example, two emails are sent. One to each of
+<code class="notranslate">receiver&#64;domain.org</code> and <code class="notranslate">other&#64;domain.org</code>. These recipients will
+not be aware of each other:</p>
+<div class="literal-block notranslate"><div class="last highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the Transport</span>
+<span class="nv">$transport</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_SmtpTransport</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+
+<span class="c1">// Create the Mailer using your created Transport</span>
+<span class="nv">$mailer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Mailer</span><span class="p">(</span><span class="nv">$transport</span><span class="p">);</span>
+
+<span class="c1">// Create a message</span>
+<span class="nv">$message</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">(</span><span class="s1">&#39;Wonderful Subject&#39;</span><span class="p">))</span>
+  <span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">([</span><span class="s1">&#39;john@doe.com&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;John Doe&#39;</span><span class="p">])</span>
+  <span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">&#39;Here is the message itself&#39;</span><span class="p">)</span>
+  <span class="p">;</span>
+
+<span class="c1">// Send the message</span>
+<span class="nv">$failedRecipients</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="nv">$numSent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nv">$to</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;receiver@domain.org&#39;</span><span class="p">,</span> <span class="s1">&#39;other@domain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;A name&#39;</span><span class="p">];</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$to</span> <span class="k">as</span> <span class="nv">$address</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">is_int</span><span class="p">(</span><span class="nv">$address</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setTo</span><span class="p">(</span><span class="nv">$name</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setTo</span><span class="p">([</span><span class="nv">$address</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">]);</span>
+  <span class="p">}</span>
+
+  <span class="nv">$numSent</span> <span class="o">+=</span> <span class="nv">$mailer</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$message</span><span class="p">,</span> <span class="nv">$failedRecipients</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nb">printf</span><span class="p">(</span><span class="s2">&quot;Sent %d messages</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$numSent</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+</div></div>
+</div>
+</div>
+<div class="section" id="finding-out-rejected-addresses">
+<h3>Finding out Rejected Addresses<a class="headerlink" href="#finding-out-rejected-addresses" title="Permalink to this headline">¶</a></h3>
+<p>It's possible to get a list of addresses that were rejected by the Transport by
+using a by-reference parameter to <code class="notranslate">send()</code>.</p>
+<p>As Swift Mailer attempts to send the message to each address given to it, if a
+recipient is rejected it will be added to the array. You can pass an existing
+array, otherwise one will be created by-reference.</p>
+<p>Collecting the list of recipients that were rejected can be useful in
+circumstances where you need to &quot;prune&quot; a mailing list for example when some
+addresses cannot be delivered to.</p>
+<div class="section" id="getting-failures-by-reference">
+<h4>Getting Failures By-reference<a class="headerlink" href="#getting-failures-by-reference" title="Permalink to this headline">¶</a></h4>
+<p>Collecting delivery failures by-reference with the <code class="notranslate">send()</code> method is as
+simple as passing a variable name to the method call:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$mailer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Mailer</span><span class="p">(</span> <span class="o">...</span> <span class="p">);</span>
+
+<span class="nv">$message</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">(</span> <span class="o">...</span> <span class="p">))</span>
+  <span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">(</span> <span class="o">...</span> <span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">setTo</span><span class="p">([</span>
+    <span class="s1">&#39;receiver@bad-domain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Receiver Name&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;other@domain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;A name&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;other-receiver@bad-domain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Other Name&#39;</span>
+  <span class="p">))</span>
+  <span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span> <span class="o">...</span> <span class="p">)</span>
+  <span class="p">;</span>
+
+<span class="c1">// Pass a variable name to the send() method</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$mailer</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$message</span><span class="p">,</span> <span class="nv">$failures</span><span class="p">))</span>
+<span class="p">{</span>
+  <span class="k">echo</span> <span class="s2">&quot;Failures:&quot;</span><span class="p">;</span>
+  <span class="nb">print_r</span><span class="p">(</span><span class="nv">$failures</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm">Failures:</span>
+<span class="cm">Array (</span>
+<span class="cm">  0 =&gt; receiver@bad-domain.org,</span>
+<span class="cm">  1 =&gt; other-receiver@bad-domain.org</span>
+<span class="cm">)</span>
+<span class="cm">*/</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>If the Transport rejects any of the recipients, the culprit addresses will be
+added to the array provided by-reference.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">If the variable name does not yet exist, it will be initialized as an
+empty array and then failures will be added to that array. If the variable
+already exists it will be type-cast to an array and failures will be added
+to it.</p>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+
+    </div>
+
+            <div class="navigation">
+                            <a accesskey="P" title="Message Headers" href="headers.html">
+                    &laquo;&nbsp;Message Headers
+                </a>
+                        <span class="separator">|</span>                            <a accesskey="N" title="Plugins" href="plugins.html">
+                    Plugins&nbsp;&raquo;
+                </a>
+                    </div>
+                      </div>
+              </div>
+          </div>
+
+          <div id="sidepanel">
+                  <div id="topicmap" class="supplementary secondary">
+        <div class="clearfix">
+            <p>&laquo;&nbsp;<a href="/docs/index.html">Table of Contents</a></p>
+
+            <div class="offline-docs">
+
+                You can download the documentation for offline reading:
+
+                <ul>
+                    <li><a id="book-pdf" href="/pdf/Swiftmailer.pdf"><img src="images/pdficon.png" alt="PDF" /></a></li>
+                    <li><a id="book-epub" href="/epub/Swiftmailer.epub"><img src="images/epubicon.png" alt="EPUB" /></a></li>
+                </ul>
+
+            </div>
+
+                            <div id="doc-toc" class="infobar-box">
+                    <h3>Chapter Table of Contents</h3>
+                    <ul>
+<li><a class="reference internal" href="#">Sending Messages</a><ul>
+<li><a class="reference internal" href="#quick-reference-for-sending-a-message">Quick Reference for Sending a Message</a><ul>
+<li><a class="reference internal" href="#transport-types">Transport Types</a><ul>
+<li><a class="reference internal" href="#the-smtp-transport">The SMTP Transport</a><ul>
+<li><a class="reference internal" href="#using-the-smtp-transport">Using the SMTP Transport</a></li>
+<li><a class="reference internal" href="#encrypted-smtp">Encrypted SMTP</a></li>
+<li><a class="reference internal" href="#smtp-with-a-username-and-password">SMTP with a Username and Password</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-sendmail-transport">The Sendmail Transport</a><ul>
+<li><a class="reference internal" href="#using-the-sendmail-transport">Using the Sendmail Transport</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#available-methods-for-sending-messages">Available Methods for Sending Messages</a><ul>
+<li><a class="reference internal" href="#using-the-send-method">Using the <code class="notranslate">send()</code> Method</a></li>
+<li><a class="reference internal" href="#sending-emails-in-batch">Sending Emails in Batch</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#finding-out-rejected-addresses">Finding out Rejected Addresses</a><ul>
+<li><a class="reference internal" href="#getting-failures-by-reference">Getting Failures By-reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+                    <h3>Table of Contents</h3>
+                    <ul>
+                        <li><a href="introduction.html">Introduction</a></li>
+                        <li><a href="messages.html">Creating Messages</a></li>
+                        <li><a href="headers.html">Message Headers</a></li>
+                        <li><a href="sending.html">Sending messages</a></li>
+                        <li><a href="plugins.html">Plugins</a></li>
+                        <li><a href="japanese.html">Japanese</a></li>
+                    </ul>
+                </div>
+            
+            <div class="infobar-box">
+                <h3>Questions &amp; Feedback</h3>
+                <div class="feedback">
+                    <p>
+                      <strong>Found a typo or an error?</strong><br />
+                      Open a <a href="https://github.com/swiftmailer/swiftmailer/issues">ticket</a>.
+                    </p>
+                    <p>
+                      <strong>Need support or have a technical question?</strong><br />
+                      Ask support on <a href="https://stackoverflow.com/">Stack Overflow</a>.
+                     </p>
+                </div>
+
+                <h3>License</h3>
+                <div id="license">
+                    <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" src="https://symfony.com/images/license.png" /></a>
+                    Swiftmailer <span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" rel="dc:type">documentation</span> is licensed under a
+                    Creative Commons Attribution-Share Alike 3.0
+                    Unported <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/">License</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+          </div>
+
+        <div id="footer">
+          <div id="footercontent">
+            
+            <div id="about">
+            </div>
+        
+        <div id="support">
+          
+          <dl class="getstarted">
+            <dt>Get Started</dt>
+            <dd>
+              <ul>
+                <li><a href="/download">Download</a></li>
+                <!--<li>Tutorials</li>-->
+                <li><a href="/docs/introduction.html">User Guide &amp; Book</a></li>
+              </ul>
+            </dd>
+          </dl>
+
+          <dl class="related">
+            <dt>Get Help</dt>
+            <dd>
+              <ul>
+                <li><a href="/docs/introduction.html">Documentation</a></li>
+                <li><a href="/bugs">Report a Bug</a></li>
+                <li><a href="https://groups.google.com/group/swiftmailer">Google Group</a></li>
+              </ul>
+            </dd>
+          </dl>
+
+            </div>
+            
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+    </div>
+  </body>
+</html>

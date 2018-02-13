@@ -1,0 +1,1290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+    <head>
+        <meta name="keywords" content="swift mailer, swiftmailer, swiftmail, php mailer, phpmailer, oop mailer, bulk emailing" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <link href="../css/global.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/homepage.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/download.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/documentation.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/pygments.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../css/code.css" media="screen" rel="stylesheet" type="text/css" />
+
+        <title>Creating Messages &#8211; Documentation &#8211; Swift Mailer</title>
+
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+        </script>
+  </head>
+  <body>
+  <a href="https://github.com/ruden/swiftmailer-docs-ru"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
+    <div id="layoutcontainer">
+      
+    <div id="layout">
+      
+      <div id="header" class="corners top right left">
+        <div id="headercontent">
+          <img id="logo" src="../images/logo.png" alt="Swift Mailer" />
+          
+          <div id="navigation">
+            <ul>
+              <li><a href="/swiftmailer-docs-ru/">Главная</a></li>
+              <li><a href="/swiftmailer-docs-ru/download.html">Установка</a></li>
+              <li><a href="/swiftmailer-docs-ru/docs/introduction.html">Документация</a></li>
+              <li><a href="/swiftmailer-docs-ru/bugs.html">Ошибки</a></li>
+              <li class="tab corners top right left"><a class="download-file" href="/swiftmailer-docs-ru/download.html">текущий 6.0.2</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="wrapper" class="corners bottom right left">
+
+          <div>
+              <div id="container">
+                  <div id="content">
+                          <div id="doc" class="body-web">
+        <div class="section" id="creating-messages">
+<h1>Creating Messages<a class="headerlink" href="#creating-messages" title="Permalink to this headline">¶</a></h1>
+<p>Creating messages in Swift Mailer is done by making use of the various MIME
+entities provided with the library. Complex messages can be quickly created
+with very little effort.</p>
+<div class="section" id="quick-reference">
+<h2>Quick Reference<a class="headerlink" href="#quick-reference" title="Permalink to this headline">¶</a></h2>
+<p>You can think of creating a Message as being similar to the steps you perform
+when you click the Compose button in your mail client. You give it a subject,
+specify some recipients, add any attachments and write your message:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the message</span>
+<span class="nv">$message</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">())</span>
+
+  <span class="c1">// Give the message a subject</span>
+  <span class="o">-&gt;</span><span class="na">setSubject</span><span class="p">(</span><span class="s1">&#39;Your subject&#39;</span><span class="p">)</span>
+
+  <span class="c1">// Set the From address with an associative array</span>
+  <span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">([</span><span class="s1">&#39;john@doe.com&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;John Doe&#39;</span><span class="p">])</span>
+
+  <span class="c1">// Set the To addresses with an associative array (setTo/setCc/setBcc)</span>
+  <span class="o">-&gt;</span><span class="na">setTo</span><span class="p">([</span><span class="s1">&#39;receiver@domain.org&#39;</span><span class="p">,</span> <span class="s1">&#39;other@domain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;A name&#39;</span><span class="p">])</span>
+
+  <span class="c1">// Give it a body</span>
+  <span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">&#39;Here is the message itself&#39;</span><span class="p">)</span>
+
+  <span class="c1">// And optionally an alternative body</span>
+  <span class="o">-&gt;</span><span class="na">addPart</span><span class="p">(</span><span class="s1">&#39;&lt;q&gt;Here is the message itself&lt;/q&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;text/html&#39;</span><span class="p">)</span>
+
+  <span class="c1">// Optionally add any attachments</span>
+  <span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="nx">Swift_Attachment</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;my-document.pdf&#39;</span><span class="p">))</span>
+  <span class="p">;</span>
+</pre></div>
+</td></tr></table></div></div>
+</div>
+<div class="section" id="message-basics">
+<h2>Message Basics<a class="headerlink" href="#message-basics" title="Permalink to this headline">¶</a></h2>
+<p>A message is a container for anything you want to send to somebody else. There
+are several basic aspects of a message that you should know.</p>
+<p>An e-mail message is made up of several relatively simple entities that are
+combined in different ways to achieve different results. All of these entities
+have the same fundamental outline but serve a different purpose. The Message
+itself can be defined as a MIME entity, an Attachment is a MIME entity, all
+MIME parts are MIME entities -- and so on!</p>
+<p>The basic units of each MIME entity -- be it the Message itself, or an
+Attachment -- are its Headers and its body:</p>
+<div class="literal-block notranslate"><div class="highlight-text"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span>Header-Name: A header value
+Other-Header: Another value
+
+The body content itself
+</pre></div>
+</td></tr></table></div></div>
+<p>The Headers of a MIME entity, and its body must conform to some strict
+standards defined by various RFC documents. Swift Mailer ensures that these
+specifications are followed by using various types of object, including
+Encoders and different Header types to generate the entity.</p>
+<div class="section" id="the-structure-of-a-message">
+<h3>The Structure of a Message<a class="headerlink" href="#the-structure-of-a-message" title="Permalink to this headline">¶</a></h3>
+<p>Of all of the MIME entities, a message -- <code class="notranslate">Swift_Message</code> is the largest and
+most complex. It has many properties that can be updated and it can contain
+other MIME entities -- attachments for example -- nested inside it.</p>
+<p>A Message has a lot of different Headers which are there to present information
+about the message to the recipients' mail client. Most of these headers will be
+familiar to the majority of users, but we'll list the basic ones. Although it's
+possible to work directly with the Headers of a Message (or other MIME entity),
+the standard Headers have accessor methods provided to abstract away the
+complex details for you. For example, although the Date on a message is written
+with a strict format, you only need to pass a DateTimeInterface instance to
+<code class="notranslate">setDate()</code>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="63%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Header</th>
+<th class="head">Description</th>
+<th class="head">Accessors</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="notranslate">Message-ID</code></td>
+<td>Identifies this message with a unique ID, usually containing the domain name and time generated</td>
+<td><code class="notranslate">getId()</code> / <code class="notranslate">setId()</code></td>
+</tr>
+<tr class="row-odd"><td><code class="notranslate">Return-Path</code></td>
+<td>Specifies where bounces should go (Swift Mailer reads this for other uses)</td>
+<td><code class="notranslate">getReturnPath()</code> / <code class="notranslate">setReturnPath()</code></td>
+</tr>
+<tr class="row-even"><td><code class="notranslate">From</code></td>
+<td>Specifies the address of the person who the message is from. This can be multiple addresses if multiple people wrote the message.</td>
+<td><code class="notranslate">getFrom()</code> / <code class="notranslate">setFrom()</code></td>
+</tr>
+<tr class="row-odd"><td><code class="notranslate">Sender</code></td>
+<td>Specifies the address of the person who physically sent the message (higher precedence than <code class="notranslate">From:</code>)</td>
+<td><code class="notranslate">getSender()</code> / <code class="notranslate">setSender()</code></td>
+</tr>
+<tr class="row-even"><td><code class="notranslate">To</code></td>
+<td>Specifies the addresses of the intended recipients</td>
+<td><code class="notranslate">getTo()</code> / <code class="notranslate">setTo()</code></td>
+</tr>
+<tr class="row-odd"><td><code class="notranslate">Cc</code></td>
+<td>Specifies the addresses of recipients who will be copied in on the message</td>
+<td><code class="notranslate">getCc()</code> / <code class="notranslate">setCc()</code></td>
+</tr>
+<tr class="row-even"><td><code class="notranslate">Bcc</code></td>
+<td>Specifies the addresses of recipients who the message will be blind-copied to. Other recipients will not be aware of these copies.</td>
+<td><code class="notranslate">getBcc()</code> / <code class="notranslate">setBcc()</code></td>
+</tr>
+<tr class="row-odd"><td><code class="notranslate">Reply-To</code></td>
+<td>Specifies the address where replies are sent to</td>
+<td><code class="notranslate">getReplyTo()</code> / <code class="notranslate">setReplyTo()</code></td>
+</tr>
+<tr class="row-even"><td><code class="notranslate">Subject</code></td>
+<td>Specifies the subject line that is displayed in the recipients' mail client</td>
+<td><code class="notranslate">getSubject()</code> / <code class="notranslate">setSubject()</code></td>
+</tr>
+<tr class="row-odd"><td><code class="notranslate">Date</code></td>
+<td>Specifies the date at which the message was sent</td>
+<td><code class="notranslate">getDate()</code> / <code class="notranslate">setDate()</code></td>
+</tr>
+<tr class="row-even"><td><code class="notranslate">Content-Type</code></td>
+<td>Specifies the format of the message (usually text/plain or text/html)</td>
+<td><code class="notranslate">getContentType()</code> / <code class="notranslate">setContentType()</code></td>
+</tr>
+<tr class="row-odd"><td><code class="notranslate">Content-Transfer-Encoding</code></td>
+<td>Specifies the encoding scheme in the message</td>
+<td><code class="notranslate">getEncoder()</code> / <code class="notranslate">setEncoder()</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="working-with-a-message-object">
+<h3>Working with a Message Object<a class="headerlink" href="#working-with-a-message-object" title="Permalink to this headline">¶</a></h3>
+<p>Although there are a lot of available methods on a message object, you only
+need to make use of a small subset of them. Usually you'll use
+<code class="notranslate">setSubject()</code>, <code class="notranslate">setTo()</code> and <code class="notranslate">setFrom()</code> before setting the body of your
+message with <code class="notranslate">setBody()</code>:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="nv">$message</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">();</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setSubject</span><span class="p">(</span><span class="s1">&#39;My subject&#39;</span><span class="p">);</span>
+</pre></div>
+</div></div>
+<p>All MIME entities (including a message) have a <code class="notranslate">toString()</code> method that you
+can call if you want to take a look at what is going to be sent. For example,
+if you <code class="notranslate">echo $message-&gt;toString();</code> you would see something like this:</p>
+<div class="literal-block notranslate"><div class="highlight-text"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span>Message-ID: &lt;1230173678.4952f5eeb1432@swift.generated&gt;
+Date: Thu, 25 Dec 2008 13:54:38 +1100
+Subject: Example subject
+From: Chris Corbyn &lt;chris@w3style.co.uk&gt;
+To: Receiver Name &lt;recipient@example.org&gt;
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Here is the message
+</pre></div>
+</td></tr></table></div></div>
+<p>We'll take a closer look at the methods you use to create your message in the
+following sections.</p>
+</div>
+</div>
+<div class="section" id="adding-content-to-your-message">
+<h2>Adding Content to Your Message<a class="headerlink" href="#adding-content-to-your-message" title="Permalink to this headline">¶</a></h2>
+<p>Rich content can be added to messages in Swift Mailer with relative ease by
+calling methods such as <code class="notranslate">setSubject()</code>, <code class="notranslate">setBody()</code>, <code class="notranslate">addPart()</code> and
+<code class="notranslate">attach()</code>.</p>
+<div class="section" id="setting-the-subject-line">
+<h3>Setting the Subject Line<a class="headerlink" href="#setting-the-subject-line" title="Permalink to this headline">¶</a></h3>
+<p>The subject line, displayed in the recipients' mail client can be set with the
+<code class="notranslate">setSubject()</code> method, or as a parameter to <code class="notranslate">new Swift_Message()</code>:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Pass it as a parameter when you create the message</span>
+<span class="nv">$message</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">(</span><span class="s1">&#39;My amazing subject&#39;</span><span class="p">);</span>
+
+<span class="c1">// Or set it after like this</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setSubject</span><span class="p">(</span><span class="s1">&#39;My amazing subject&#39;</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+</div>
+<div class="section" id="setting-the-body-content">
+<h3>Setting the Body Content<a class="headerlink" href="#setting-the-body-content" title="Permalink to this headline">¶</a></h3>
+<p>The body of the message -- seen when the user opens the message -- is specified
+by calling the <code class="notranslate">setBody()</code> method. If an alternative body is to be included,
+<code class="notranslate">addPart()</code> can be used.</p>
+<p>The body of a message is the main part that is read by the user. Often people
+want to send a message in HTML format (<code class="notranslate">text/html</code>), other times people want
+to send in plain text (<code class="notranslate">text/plain</code>), or sometimes people want to send both
+versions and allow the recipient to choose how they view the message.</p>
+<p>As a rule of thumb, if you're going to send a HTML email, always include a
+plain-text equivalent of the same content so that users who prefer to read
+plain text can do so.</p>
+<p>If the recipient's mail client offers preferences for displaying text vs. HTML
+then the mail client will present that part to the user where available. In
+other cases the mail client will display the &quot;best&quot; part it can - usually HTML
+if you've included HTML:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Pass it as a parameter when you create the message</span>
+<span class="nv">$message</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">(</span><span class="s1">&#39;Subject here&#39;</span><span class="p">,</span> <span class="s1">&#39;My amazing body&#39;</span><span class="p">);</span>
+
+<span class="c1">// Or set it after like this</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">&#39;My &lt;em&gt;amazing&lt;/em&gt; body&#39;</span><span class="p">,</span> <span class="s1">&#39;text/html&#39;</span><span class="p">);</span>
+
+<span class="c1">// Add alternative parts with addPart()</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">addPart</span><span class="p">(</span><span class="s1">&#39;My amazing body in plain text&#39;</span><span class="p">,</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+</div>
+</div>
+<div class="section" id="attaching-files">
+<h2>Attaching Files<a class="headerlink" href="#attaching-files" title="Permalink to this headline">¶</a></h2>
+<p>Attachments are downloadable parts of a message and can be added by calling the
+<code class="notranslate">attach()</code> method on the message. You can add attachments that exist on disk,
+or you can create attachments on-the-fly.</p>
+<p>Although we refer to files sent over e-mails as &quot;attachments&quot; -- because
+they're attached to the message -- lots of other parts of the message are
+actually &quot;attached&quot; even if we don't refer to these parts as attachments.</p>
+<p>File attachments are created by the <code class="notranslate">Swift_Attachment</code> class and then
+attached to the message via the <code class="notranslate">attach()</code> method on it. For all of the
+&quot;every day&quot; MIME types such as all image formats, word documents, PDFs and
+spreadsheets you don't need to explicitly set the content-type of the
+attachment, though it would do no harm to do so. For less common formats you
+should set the content-type -- which we'll cover in a moment.</p>
+<div class="section" id="attaching-existing-files">
+<h3>Attaching Existing Files<a class="headerlink" href="#attaching-existing-files" title="Permalink to this headline">¶</a></h3>
+<p>Files that already exist, either on disk or at a URL can be attached to a
+message with just one line of code, using <code class="notranslate">Swift_Attachment::fromPath()</code>.</p>
+<p>You can attach files that exist locally, or if your PHP installation has
+<code class="notranslate">allow_url_fopen</code> turned on you can attach files from other
+websites.</p>
+<p>The attachment will be presented to the recipient as a downloadable file with
+the same filename as the one you attached:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the attachment</span>
+<span class="c1">// * Note that you can technically leave the content-type parameter out</span>
+<span class="nv">$attachment</span> <span class="o">=</span> <span class="nx">Swift_Attachment</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;/path/to/image.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;image/jpeg&#39;</span><span class="p">);</span>
+
+<span class="c1">// Attach it to the message</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="nv">$attachment</span><span class="p">);</span>
+
+<span class="c1">// The two statements above could be written in one line instead</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="nx">Swift_Attachment</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;/path/to/image.jpg&#39;</span><span class="p">));</span>
+
+<span class="c1">// You can attach files from a URL if allow_url_fopen is on in php.ini</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="nx">Swift_Attachment</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;http://site.tld/logo.png&#39;</span><span class="p">));</span>
+</pre></div>
+</td></tr></table></div></div>
+</div>
+<div class="section" id="setting-the-filename">
+<h3>Setting the Filename<a class="headerlink" href="#setting-the-filename" title="Permalink to this headline">¶</a></h3>
+<p>Usually you don't need to explicitly set the filename of an attachment because
+the name of the attached file will be used by default, but if you want to set
+the filename you use the <code class="notranslate">setFilename()</code> method of the Attachment.</p>
+<p>The attachment will be attached in the normal way, but meta-data sent inside
+the email will rename the file to something else:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the attachment and call its setFilename() method</span>
+<span class="nv">$attachment</span> <span class="o">=</span> <span class="nx">Swift_Attachment</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;/path/to/image.jpg&#39;</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">setFilename</span><span class="p">(</span><span class="s1">&#39;cool.jpg&#39;</span><span class="p">);</span>
+
+<span class="c1">// Because there&#39;s a fluid interface, you can do this in one statement</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span>
+  <span class="nx">Swift_Attachment</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;/path/to/image.jpg&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">setFilename</span><span class="p">(</span><span class="s1">&#39;cool.jpg&#39;</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+</div>
+<div class="section" id="attaching-dynamic-content">
+<h3>Attaching Dynamic Content<a class="headerlink" href="#attaching-dynamic-content" title="Permalink to this headline">¶</a></h3>
+<p>Files that are generated at runtime, such as PDF documents or images created
+via GD can be attached directly to a message without writing them out to disk.
+Use <code class="notranslate">Swift_Attachment</code> directly.</p>
+<p>The attachment will be presented to the recipient as a downloadable file
+with the filename and content-type you specify:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create your file contents in the normal way, but don&#39;t write them to disk</span>
+<span class="nv">$data</span> <span class="o">=</span> <span class="nx">create_my_pdf_data</span><span class="p">();</span>
+
+<span class="c1">// Create the attachment with your data</span>
+<span class="nv">$attachment</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Attachment</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="s1">&#39;my-file.pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;application/pdf&#39;</span><span class="p">);</span>
+
+<span class="c1">// Attach it to the message</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="nv">$attachment</span><span class="p">);</span>
+
+
+<span class="c1">// You can alternatively use method chaining to build the attachment</span>
+<span class="nv">$attachment</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Swift_Attachment</span><span class="p">())</span>
+  <span class="o">-&gt;</span><span class="na">setFilename</span><span class="p">(</span><span class="s1">&#39;my-file.pdf&#39;</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">setContentType</span><span class="p">(</span><span class="s1">&#39;application/pdf&#39;</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="nv">$data</span><span class="p">)</span>
+  <span class="p">;</span>
+</pre></div>
+</td></tr></table></div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">If you would usually write the file to disk anyway you should just attach
+it with <code class="notranslate">Swift_Attachment::fromPath()</code> since this will use less memory.</p>
+</div></div>
+</div>
+<div class="section" id="changing-the-disposition">
+<h3>Changing the Disposition<a class="headerlink" href="#changing-the-disposition" title="Permalink to this headline">¶</a></h3>
+<p>Attachments just appear as files that can be saved to the Desktop if desired.
+You can make attachment appear inline where possible by using the
+<code class="notranslate">setDisposition()</code> method of an attachment.</p>
+<p>The attachment will be displayed within the email viewing window if the mail
+client knows how to display it:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the attachment and call its setDisposition() method</span>
+<span class="nv">$attachment</span> <span class="o">=</span> <span class="nx">Swift_Attachment</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;/path/to/image.jpg&#39;</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">setDisposition</span><span class="p">(</span><span class="s1">&#39;inline&#39;</span><span class="p">);</span>
+
+
+<span class="c1">// Because there&#39;s a fluid interface, you can do this in one statement</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span>
+  <span class="nx">Swift_Attachment</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;/path/to/image.jpg&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">setDisposition</span><span class="p">(</span><span class="s1">&#39;inline&#39;</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">If you try to create an inline attachment for a non-displayable file type
+such as a ZIP file, the mail client should just present the attachment as
+normal.</p>
+</div></div>
+</div>
+<div class="section" id="embedding-inline-media-files">
+<h3>Embedding Inline Media Files<a class="headerlink" href="#embedding-inline-media-files" title="Permalink to this headline">¶</a></h3>
+<p>Often, people want to include an image or other content inline with a HTML
+message. It's easy to do this with HTML linking to remote resources, but this
+approach is usually blocked by mail clients. Swift Mailer allows you to embed
+your media directly into the message.</p>
+<p>Mail clients usually block downloads from remote resources because this
+technique was often abused as a mean of tracking who opened an email. If
+you're sending a HTML email and you want to include an image in the message
+another approach you can take is to embed the image directly.</p>
+<p>Swift Mailer makes embedding files into messages extremely streamlined. You
+embed a file by calling the <code class="notranslate">embed()</code> method of the message,
+which returns a value you can use in a <code class="notranslate">src</code> or
+<code class="notranslate">href</code> attribute in your HTML.</p>
+<p>Just like with attachments, it's possible to embed dynamically generated
+content without having an existing file available.</p>
+<p>The embedded files are sent in the email as a special type of attachment that
+has a unique ID used to reference them within your HTML attributes. On mail
+clients that do not support embedded files they may appear as attachments.</p>
+<p>Although this is commonly done for images, in theory it will work for any
+displayable (or playable) media type. Support for other media types (such as
+video) is dependent on the mail client however.</p>
+<div class="section" id="embedding-existing-files">
+<h4>Embedding Existing Files<a class="headerlink" href="#embedding-existing-files" title="Permalink to this headline">¶</a></h4>
+<p>Files that already exist, either on disk or at a URL can be embedded in a
+message with just one line of code, using <code class="notranslate">Swift_EmbeddedFile::fromPath()</code>.</p>
+<p>You can embed files that exist locally, or if your PHP installation has
+<code class="notranslate">allow_url_fopen</code> turned on you can embed files from other websites.</p>
+<p>The file will be displayed with the message inline with the HTML wherever its ID
+is used as a <code class="notranslate">src</code> attribute:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create the message</span>
+<span class="nv">$message</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">(</span><span class="s1">&#39;My subject&#39;</span><span class="p">);</span>
+
+<span class="c1">// Set the body</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span>
+<span class="s1">&#39;&lt;html&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Here is an image &lt;img src=&quot;&#39;</span> <span class="o">.</span> <span class="c1">// Embed the file</span>
+     <span class="nv">$message</span><span class="o">-&gt;</span><span class="na">embed</span><span class="p">(</span><span class="nx">Swift_Image</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;image.png&#39;</span><span class="p">))</span> <span class="o">.</span>
+   <span class="s1">&#39;&quot; alt=&quot;Image&quot; /&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Rest of message&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;/body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;&lt;/html&gt;&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;text/html&#39;</span> <span class="c1">// Mark the content-type as HTML</span>
+<span class="p">);</span>
+
+<span class="c1">// You can embed files from a URL if allow_url_fopen is on in php.ini</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span>
+<span class="s1">&#39;&lt;html&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Here is an image &lt;img src=&quot;&#39;</span> <span class="o">.</span>
+     <span class="nv">$message</span><span class="o">-&gt;</span><span class="na">embed</span><span class="p">(</span><span class="nx">Swift_Image</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;http://site.tld/logo.png&#39;</span><span class="p">))</span> <span class="o">.</span>
+   <span class="s1">&#39;&quot; alt=&quot;Image&quot; /&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Rest of message&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;/body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;&lt;/html&gt;&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;text/html&#39;</span>
+<span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last"><code class="notranslate">Swift_Image</code> and <code class="notranslate">Swift_EmbeddedFile</code> are just aliases of one another.
+<code class="notranslate">Swift_Image</code> exists for semantic purposes.</p>
+</div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p>You can embed files in two stages if you prefer. Just capture the return
+value of <code class="notranslate">embed()</code> in a variable and use that as the <code class="notranslate">src</code> attribute:</p>
+<div class="literal-block notranslate"><div class="last highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// If placing the embed() code inline becomes cumbersome</span>
+<span class="c1">// it&#39;s easy to do this in two steps</span>
+<span class="nv">$cid</span> <span class="o">=</span> <span class="nv">$message</span><span class="o">-&gt;</span><span class="na">embed</span><span class="p">(</span><span class="nx">Swift_Image</span><span class="o">::</span><span class="na">fromPath</span><span class="p">(</span><span class="s1">&#39;image.png&#39;</span><span class="p">));</span>
+
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span>
+<span class="s1">&#39;&lt;html&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Here is an image &lt;img src=&quot;&#39;</span> <span class="o">.</span> <span class="nv">$cid</span> <span class="o">.</span> <span class="s1">&#39;&quot; alt=&quot;Image&quot; /&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Rest of message&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;/body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;&lt;/html&gt;&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;text/html&#39;</span> <span class="c1">// Mark the content-type as HTML</span>
+<span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+</div></div>
+</div>
+<div class="section" id="embedding-dynamic-content">
+<h4>Embedding Dynamic Content<a class="headerlink" href="#embedding-dynamic-content" title="Permalink to this headline">¶</a></h4>
+<p>Images that are generated at runtime, such as images created via GD can be
+embedded directly to a message without writing them out to disk. Use the
+standard <code class="notranslate">new Swift_Image()</code> method.</p>
+<p>The file will be displayed with the message inline with the HTML wherever its ID
+is used as a <code class="notranslate">src</code> attribute:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Create your file contents in the normal way, but don&#39;t write them to disk</span>
+<span class="nv">$img_data</span> <span class="o">=</span> <span class="nx">create_my_image_data</span><span class="p">();</span>
+
+<span class="c1">// Create the message</span>
+<span class="nv">$message</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">(</span><span class="s1">&#39;My subject&#39;</span><span class="p">);</span>
+
+<span class="c1">// Set the body</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span>
+<span class="s1">&#39;&lt;html&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Here is an image &lt;img src=&quot;&#39;</span> <span class="o">.</span> <span class="c1">// Embed the file</span>
+     <span class="nv">$message</span><span class="o">-&gt;</span><span class="na">embed</span><span class="p">(</span><span class="k">new</span> <span class="nx">Swift_Image</span><span class="p">(</span><span class="nv">$img_data</span><span class="p">,</span> <span class="s1">&#39;image.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;image/jpeg&#39;</span><span class="p">))</span> <span class="o">.</span>
+   <span class="s1">&#39;&quot; alt=&quot;Image&quot; /&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Rest of message&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;/body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;&lt;/html&gt;&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;text/html&#39;</span> <span class="c1">// Mark the content-type as HTML</span>
+<span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last"><code class="notranslate">Swift_Image</code> and <code class="notranslate">Swift_EmbeddedFile</code> are just aliases of one another.
+<code class="notranslate">Swift_Image</code> exists for semantic purposes.</p>
+</div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p>You can embed files in two stages if you prefer. Just capture the return
+value of <code class="notranslate">embed()</code> in a variable and use that as the <code class="notranslate">src</code> attribute:</p>
+<div class="literal-block notranslate"><div class="last highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// If placing the embed() code inline becomes cumbersome</span>
+<span class="c1">// it&#39;s easy to do this in two steps</span>
+<span class="nv">$cid</span> <span class="o">=</span> <span class="nv">$message</span><span class="o">-&gt;</span><span class="na">embed</span><span class="p">(</span><span class="k">new</span> <span class="nx">Swift_Image</span><span class="p">(</span><span class="nv">$img_data</span><span class="p">,</span> <span class="s1">&#39;image.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;image/jpeg&#39;</span><span class="p">));</span>
+
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span>
+<span class="s1">&#39;&lt;html&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Here is an image &lt;img src=&quot;&#39;</span> <span class="o">.</span> <span class="nv">$cid</span> <span class="o">.</span> <span class="s1">&#39;&quot; alt=&quot;Image&quot; /&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;  Rest of message&#39;</span> <span class="o">.</span>
+<span class="s1">&#39; &lt;/body&gt;&#39;</span> <span class="o">.</span>
+<span class="s1">&#39;&lt;/html&gt;&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;text/html&#39;</span> <span class="c1">// Mark the content-type as HTML</span>
+<span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+</div></div>
+</div>
+</div>
+</div>
+<div class="section" id="adding-recipients-to-your-message">
+<h2>Adding Recipients to Your Message<a class="headerlink" href="#adding-recipients-to-your-message" title="Permalink to this headline">¶</a></h2>
+<p>Recipients are specified within the message itself via <code class="notranslate">setTo()</code>, <code class="notranslate">setCc()</code>
+and <code class="notranslate">setBcc()</code>. Swift Mailer reads these recipients from the message when it
+gets sent so that it knows where to send the message to.</p>
+<p>Message recipients are one of three types:</p>
+<ul class="simple">
+<li><code class="notranslate">To:</code> recipients -- the primary recipients (required)</li>
+<li><code class="notranslate">Cc:</code> recipients -- receive a copy of the message (optional)</li>
+<li><code class="notranslate">Bcc:</code> recipients -- hidden from other recipients (optional)</li>
+</ul>
+<p>Each type can contain one, or several addresses. It's possible to list only the
+addresses of the recipients, or you can personalize the address by providing
+the real name of the recipient.</p>
+<p>Make sure to add only valid email addresses as recipients. If you try to add an
+invalid email address with <code class="notranslate">setTo()</code>, <code class="notranslate">setCc()</code> or <code class="notranslate">setBcc()</code>, Swift
+Mailer will throw a <code class="notranslate">Swift_RfcComplianceException</code>.</p>
+<p>If you add recipients automatically based on a data source that may contain
+invalid email addresses, you can prevent possible exceptions by validating the
+addresses using:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Egulias\EmailValidator\EmailValidator</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Egulias\EmailValidator\Validation\RFCValidation</span><span class="p">;</span>
+
+<span class="nv">$validator</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EmailValidator</span><span class="p">();</span>
+<span class="nv">$validator</span><span class="o">-&gt;</span><span class="na">isValid</span><span class="p">(</span><span class="s2">&quot;example@example.com&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">RFCValidation</span><span class="p">());</span> <span class="c1">//true</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>and only adding addresses that validate. Another way would be to wrap your <code class="notranslate">setTo()</code>, <code class="notranslate">setCc()</code> and
+<code class="notranslate">setBcc()</code> calls in a try-catch block and handle the
+<code class="notranslate">Swift_RfcComplianceException</code> in the catch block.</p>
+<div class="admonition-wrapper">
+<div class="sidebar"></div><div class="admonition admonition-sidebar"><p class="first sidebar-title">Syntax for Addresses</p>
+<p>If you only wish to refer to a single email address (for example your
+<code class="notranslate">From:</code> address) then you can just use a string:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">(</span><span class="s1">&#39;some@address.tld&#39;</span><span class="p">);</span>
+</pre></div>
+</div></div>
+<p>If you want to include a name then you must use an associative array:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">([</span><span class="s1">&#39;some@address.tld&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;The Name&#39;</span><span class="p">]);</span>
+</pre></div>
+</div></div>
+<p>If you want to include multiple addresses then you must use an array:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setTo</span><span class="p">([</span><span class="s1">&#39;some@address.tld&#39;</span><span class="p">,</span> <span class="s1">&#39;other@address.tld&#39;</span><span class="p">]);</span>
+</pre></div>
+</div></div>
+<p>You can mix personalized (addresses with a name) and non-personalized
+addresses in the same list by mixing the use of associative and
+non-associative array syntax:</p>
+<div class="literal-block notranslate"><div class="last highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setTo</span><span class="p">([</span>
+  <span class="s1">&#39;recipient-with-name@example.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Recipient Name One&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;no-name@example.org&#39;</span><span class="p">,</span> <span class="c1">// Note that this is not a key-value pair</span>
+  <span class="s1">&#39;named-recipient@example.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Recipient Name Two&#39;</span>
+<span class="p">]);</span>
+</pre></div>
+</td></tr></table></div></div>
+</div></div>
+<div class="section" id="setting-to-recipients">
+<h3>Setting <code class="notranslate">To:</code> Recipients<a class="headerlink" href="#setting-to-recipients" title="Permalink to this headline">¶</a></h3>
+<p><code class="notranslate">To:</code> recipients are required in a message and are set with the <code class="notranslate">setTo()</code>
+or <code class="notranslate">addTo()</code> methods of the message.</p>
+<p>To set <code class="notranslate">To:</code> recipients, create the message object using either <code class="notranslate">new
+Swift_Message( ... )</code> or <code class="notranslate">new Swift_Message( ... )</code>, then call the
+<code class="notranslate">setTo()</code> method with a complete array of addresses, or use the <code class="notranslate">addTo()</code>
+method to iteratively add recipients.</p>
+<p>The <code class="notranslate">setTo()</code> method accepts input in various formats as described earlier in
+this chapter. The <code class="notranslate">addTo()</code> method takes either one or two parameters. The
+first being the email address and the second optional parameter being the name
+of the recipient.</p>
+<p><code class="notranslate">To:</code> recipients are visible in the message headers and will be seen by the
+other recipients:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Using setTo() to set all recipients in one go</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setTo</span><span class="p">([</span>
+  <span class="s1">&#39;person1@example.org&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person2@otherdomain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Person 2 Name&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person3@example.org&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person4@example.org&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person5@example.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Person 5 Name&#39;</span>
+<span class="p">]);</span>
+</pre></div>
+</td></tr></table></div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p>Multiple calls to <code class="notranslate">setTo()</code> will not add new recipients -- each
+call overrides the previous calls. If you want to iteratively add
+recipients, use the <code class="notranslate">addTo()</code> method:</p>
+<div class="literal-block notranslate"><div class="last highlight-php"><div class="highlight"><pre><span></span><span class="c1">// Using addTo() to add recipients iteratively</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">addTo</span><span class="p">(</span><span class="s1">&#39;person1@example.org&#39;</span><span class="p">);</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">addTo</span><span class="p">(</span><span class="s1">&#39;person2@example.org&#39;</span><span class="p">,</span> <span class="s1">&#39;Person 2 Name&#39;</span><span class="p">);</span>
+</pre></div>
+</div></div>
+</div></div>
+</div>
+<div class="section" id="setting-cc-recipients">
+<h3>Setting <code class="notranslate">Cc:</code> Recipients<a class="headerlink" href="#setting-cc-recipients" title="Permalink to this headline">¶</a></h3>
+<p><code class="notranslate">Cc:</code> recipients are set with the <code class="notranslate">setCc()</code> or <code class="notranslate">addCc()</code> methods of the
+message.</p>
+<p>To set <code class="notranslate">Cc:</code> recipients, create the message object using either <code class="notranslate">new
+Swift_Message( ... )</code> or <code class="notranslate">new Swift_Message( ... )</code>, then call the
+<code class="notranslate">setCc()</code> method with a complete array of addresses, or use the <code class="notranslate">addCc()</code>
+method to iteratively add recipients.</p>
+<p>The <code class="notranslate">setCc()</code> method accepts input in various formats as described earlier in
+this chapter. The <code class="notranslate">addCc()</code> method takes either one or two parameters. The
+first being the email address and the second optional parameter being the name
+of the recipient.</p>
+<p><code class="notranslate">Cc:</code> recipients are visible in the message headers and will be seen by the
+other recipients:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Using setTo() to set all recipients in one go</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setTo</span><span class="p">([</span>
+  <span class="s1">&#39;person1@example.org&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person2@otherdomain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Person 2 Name&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person3@example.org&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person4@example.org&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person5@example.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Person 5 Name&#39;</span>
+<span class="p">]);</span>
+</pre></div>
+</td></tr></table></div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p>Multiple calls to <code class="notranslate">setCc()</code> will not add new recipients -- each call
+overrides the previous calls. If you want to iteratively add Cc:
+recipients, use the <code class="notranslate">addCc()</code> method:</p>
+<div class="literal-block notranslate"><div class="last highlight-php"><div class="highlight"><pre><span></span><span class="c1">// Using addCc() to add recipients iteratively</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">addCc</span><span class="p">(</span><span class="s1">&#39;person1@example.org&#39;</span><span class="p">);</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">addCc</span><span class="p">(</span><span class="s1">&#39;person2@example.org&#39;</span><span class="p">,</span> <span class="s1">&#39;Person 2 Name&#39;</span><span class="p">);</span>
+</pre></div>
+</div></div>
+</div></div>
+</div>
+<div class="section" id="setting-bcc-recipients">
+<h3>Setting <code class="notranslate">Bcc:</code> Recipients<a class="headerlink" href="#setting-bcc-recipients" title="Permalink to this headline">¶</a></h3>
+<p><code class="notranslate">Bcc:</code> recipients receive a copy of the message without anybody else knowing
+it, and are set with the <code class="notranslate">setBcc()</code> or <code class="notranslate">addBcc()</code> methods of the message.</p>
+<p>To set <code class="notranslate">Bcc:</code> recipients, create the message object using either <code class="notranslate">new
+Swift_Message( ... )</code> or <code class="notranslate">new Swift_Message( ... )</code>, then call the
+<code class="notranslate">setBcc()</code> method with a complete array of addresses, or use the <code class="notranslate">addBcc()</code>
+method to iteratively add recipients.</p>
+<p>The <code class="notranslate">setBcc()</code> method accepts input in various formats as described earlier
+in this chapter. The <code class="notranslate">addBcc()</code> method takes either one or two parameters.
+The first being the email address and the second optional parameter being the
+name of the recipient.</p>
+<p>Only the individual <code class="notranslate">Bcc:</code> recipient will see their address in the message
+headers. Other recipients (including other <code class="notranslate">Bcc:</code> recipients) will not see
+the address:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Using setBcc() to set all recipients in one go</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setBcc</span><span class="p">([</span>
+  <span class="s1">&#39;person1@example.org&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person2@otherdomain.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Person 2 Name&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person3@example.org&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person4@example.org&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person5@example.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Person 5 Name&#39;</span>
+<span class="p">]);</span>
+</pre></div>
+</td></tr></table></div></div>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p>Multiple calls to <code class="notranslate">setBcc()</code> will not add new recipients -- each call
+overrides the previous calls. If you want to iteratively add Bcc:
+recipients, use the <code class="notranslate">addBcc()</code> method:</p>
+<div class="literal-block notranslate"><div class="last highlight-php"><div class="highlight"><pre><span></span><span class="c1">// Using addBcc() to add recipients iteratively</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">addBcc</span><span class="p">(</span><span class="s1">&#39;person1@example.org&#39;</span><span class="p">);</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">addBcc</span><span class="p">(</span><span class="s1">&#39;person2@example.org&#39;</span><span class="p">,</span> <span class="s1">&#39;Person 2 Name&#39;</span><span class="p">);</span>
+</pre></div>
+</div></div>
+</div></div>
+</div>
+</div>
+<div class="section" id="specifying-sender-details">
+<h2>Specifying Sender Details<a class="headerlink" href="#specifying-sender-details" title="Permalink to this headline">¶</a></h2>
+<p>An email must include information about who sent it. Usually this is managed by
+the <code class="notranslate">From:</code> address, however there are other options.</p>
+<p>The sender information is contained in three possible places:</p>
+<ul class="simple">
+<li><code class="notranslate">From:</code> -- the address(es) of who wrote the message (required)</li>
+<li><code class="notranslate">Sender:</code> -- the address of the single person who sent the message
+(optional)</li>
+<li><code class="notranslate">Return-Path:</code> -- the address where bounces should go to (optional)</li>
+</ul>
+<p>You must always include a <code class="notranslate">From:</code> address by using <code class="notranslate">setFrom()</code> on the
+message. Swift Mailer will use this as the default <code class="notranslate">Return-Path:</code> unless
+otherwise specified.</p>
+<p>The <code class="notranslate">Sender:</code> address exists because the person who actually sent the email
+may not be the person who wrote the email. It has a higher precedence than the
+<code class="notranslate">From:</code> address and will be used as the <code class="notranslate">Return-Path:</code> unless otherwise
+specified.</p>
+<div class="section" id="setting-the-from-address">
+<h3>Setting the <code class="notranslate">From:</code> Address<a class="headerlink" href="#setting-the-from-address" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="notranslate">From:</code> address is required and is set with the <code class="notranslate">setFrom()</code> method of the
+message. <code class="notranslate">From:</code> addresses specify who actually wrote the email, and usually
+who sent it.</p>
+<p>What most people probably don't realize is that you can have more than one
+<code class="notranslate">From:</code> address if more than one person wrote the email -- for example if an
+email was put together by a committee.</p>
+<p>The <code class="notranslate">From:</code> address(es) are visible in the message headers and will be seen
+by the recipients.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">If you set multiple <code class="notranslate">From:</code> addresses then you absolutely must set a
+<code class="notranslate">Sender:</code> address to indicate who physically sent the message.</p>
+</div></div>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Set a single From: address</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">(</span><span class="s1">&#39;your@address.tld&#39;</span><span class="p">);</span>
+
+<span class="c1">// Set a From: address including a name</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">([</span><span class="s1">&#39;your@address.tld&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Your Name&#39;</span><span class="p">]);</span>
+
+<span class="c1">// Set multiple From: addresses if multiple people wrote the email</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">([</span>
+  <span class="s1">&#39;person1@example.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Sender One&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;person2@example.org&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Sender Two&#39;</span>
+<span class="p">]);</span>
+</pre></div>
+</td></tr></table></div></div>
+</div>
+<div class="section" id="setting-the-sender-address">
+<h3>Setting the <code class="notranslate">Sender:</code> Address<a class="headerlink" href="#setting-the-sender-address" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="notranslate">Sender:</code> address specifies who sent the message and is set with the
+<code class="notranslate">setSender()</code> method of the message.</p>
+<p>The <code class="notranslate">Sender:</code> address is visible in the message headers and will be seen by
+the recipients.</p>
+<p>This address will be used as the <code class="notranslate">Return-Path:</code> unless otherwise specified.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">If you set multiple <code class="notranslate">From:</code> addresses then you absolutely must set a
+<code class="notranslate">Sender:</code> address to indicate who physically sent the message.</p>
+</div></div>
+<p>You must not set more than one sender address on a message because it's not
+possible for more than one person to send a single message:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setSender</span><span class="p">(</span><span class="s1">&#39;your@address.tld&#39;</span><span class="p">);</span>
+</pre></div>
+</div></div>
+</div>
+<div class="section" id="setting-the-return-path-bounce-address">
+<h3>Setting the <code class="notranslate">Return-Path:</code> (Bounce) Address<a class="headerlink" href="#setting-the-return-path-bounce-address" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="notranslate">Return-Path:</code> address specifies where bounce notifications should be
+sent and is set with the <code class="notranslate">setReturnPath()</code> method of the message.</p>
+<p>You can only have one <code class="notranslate">Return-Path:</code> and it must not include a personal name.</p>
+<p>Bounce notifications will be sent to this address:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setReturnPath</span><span class="p">(</span><span class="s1">&#39;bounces@address.tld&#39;</span><span class="p">);</span>
+</pre></div>
+</div></div>
+</div>
+</div>
+<div class="section" id="signed-encrypted-message">
+<h2>Signed/Encrypted Message<a class="headerlink" href="#signed-encrypted-message" title="Permalink to this headline">¶</a></h2>
+<p>To increase the integrity/security of a message it is possible to sign and/or
+encrypt an message using one or multiple signers.</p>
+<div class="section" id="s-mime">
+<h3>S/MIME<a class="headerlink" href="#s-mime" title="Permalink to this headline">¶</a></h3>
+<p>S/MIME can sign and/or encrypt a message using the OpenSSL extension.</p>
+<p>When signing a message, the signer creates a signature of the entire content of
+the message (including attachments).</p>
+<p>The certificate and private key must be PEM encoded, and can be either created
+using for example OpenSSL or obtained at an official Certificate Authority (CA).</p>
+<p><strong>The recipient must have the CA certificate in the list of trusted issuers in
+order to verify the signature.</strong></p>
+<p><strong>Make sure the certificate supports emailProtection.</strong></p>
+<p>When using OpenSSL this can done by the including the <em>-addtrust
+emailProtection</em> parameter when creating the certificate:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$message</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">();</span>
+
+<span class="nv">$smimeSigner</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Signers_SMimeSigner</span><span class="p">();</span>
+<span class="nv">$smimeSigner</span><span class="o">-&gt;</span><span class="na">setSignCertificate</span><span class="p">(</span><span class="s1">&#39;/path/to/certificate.pem&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/private-key.pem&#39;</span><span class="p">);</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">attachSigner</span><span class="p">(</span><span class="nv">$smimeSigner</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>When the private key is secured using a passphrase use the following instead:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$message</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">();</span>
+
+<span class="nv">$smimeSigner</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Signers_SMimeSigner</span><span class="p">();</span>
+<span class="nv">$smimeSigner</span><span class="o">-&gt;</span><span class="na">setSignCertificate</span><span class="p">(</span><span class="s1">&#39;/path/to/certificate.pem&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;/path/to/private-key.pem&#39;</span><span class="p">,</span> <span class="s1">&#39;passphrase&#39;</span><span class="p">]);</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">attachSigner</span><span class="p">(</span><span class="nv">$smimeSigner</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>By default the signature is added as attachment, making the message still
+readable for mailing agents not supporting signed messages.</p>
+<p>Storing the message as binary is also possible but not recommended:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="nv">$smimeSigner</span><span class="o">-&gt;</span><span class="na">setSignCertificate</span><span class="p">(</span><span class="s1">&#39;/path/to/certificate.pem&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/private-key.pem&#39;</span><span class="p">,</span> <span class="nx">PKCS7_BINARY</span><span class="p">);</span>
+</pre></div>
+</div></div>
+<p>When encrypting the message (also known as enveloping), the entire message
+(including attachments) is encrypted using a certificate, and the recipient can
+then decrypt the message using corresponding private key.</p>
+<p>Encrypting ensures nobody can read the contents of the message without the
+private key.</p>
+<p>Normally the recipient provides a certificate for encrypting and keeping the
+decryption key private.</p>
+<p>Using both signing and encrypting is also possible:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nv">$message</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">();</span>
+
+<span class="nv">$smimeSigner</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swift_Signers_SMimeSigner</span><span class="p">();</span>
+<span class="nv">$smimeSigner</span><span class="o">-&gt;</span><span class="na">setSignCertificate</span><span class="p">(</span><span class="s1">&#39;/path/to/sign-certificate.pem&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/private-key.pem&#39;</span><span class="p">);</span>
+<span class="nv">$smimeSigner</span><span class="o">-&gt;</span><span class="na">setEncryptCertificate</span><span class="p">(</span><span class="s1">&#39;/path/to/encrypt-certificate.pem&#39;</span><span class="p">);</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">attachSigner</span><span class="p">(</span><span class="nv">$smimeSigner</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>The used encryption cipher can be set as the second parameter of
+setEncryptCertificate()</p>
+<p>See <a class="reference external" href="http://php.net/manual/openssl.ciphers">http://php.net/manual/openssl.ciphers</a> for a list of supported ciphers.</p>
+<p>By default the message is first signed and then encrypted, this can be changed
+by adding:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="nv">$smimeSigner</span><span class="o">-&gt;</span><span class="na">setSignThenEncrypt</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+</pre></div>
+</div></div>
+<p><strong>Changing this is not recommended as most mail agents don't support this
+none-standard way.</strong></p>
+<p>Only when having trouble with sign then encrypt method, this should be changed.</p>
+</div>
+</div>
+<div class="section" id="requesting-a-read-receipt">
+<h2>Requesting a Read Receipt<a class="headerlink" href="#requesting-a-read-receipt" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to request a read-receipt to be sent to an address when the
+email is opened. To request a read receipt set the address with
+<code class="notranslate">setReadReceiptTo()</code>:</p>
+<blockquote>
+<div>$message-&gt;setReadReceiptTo(<a class="reference external" href="mailto:'your&#37;&#52;&#48;address&#46;tld">'your<span>&#64;</span>address<span>&#46;</span>tld</a>');</div></blockquote>
+<p>When the email is opened, if the mail client supports it a notification will be
+sent to this address.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">Read receipts won't work for the majority of recipients since many mail
+clients auto-disable them. Those clients that will send a read receipt
+will make the user aware that one has been requested.</p>
+</div></div>
+</div>
+<div class="section" id="setting-the-character-set">
+<h2>Setting the Character Set<a class="headerlink" href="#setting-the-character-set" title="Permalink to this headline">¶</a></h2>
+<p>The character set of the message (and it's MIME parts) is set with the
+<code class="notranslate">setCharset()</code> method. You can also change the global default of UTF-8 by
+working with the <code class="notranslate">Swift_Preferences</code> class.</p>
+<p>Swift Mailer will default to the UTF-8 character set unless otherwise
+overridden. UTF-8 will work in most instances since it includes all of the
+standard US keyboard characters in addition to most international characters.</p>
+<p>It is absolutely vital however that you know what character set your message
+(or it's MIME parts) are written in otherwise your message may be received
+completely garbled.</p>
+<p>There are two places in Swift Mailer where you can change the character set:</p>
+<ul class="simple">
+<li>In the <code class="notranslate">Swift_Preferences</code> class</li>
+<li>On each individual message and/or MIME part</li>
+</ul>
+<p>To set the character set of your Message:</p>
+<ul>
+<li><p class="first">Change the global UTF-8 setting by calling
+<code class="notranslate">Swift_Preferences::setCharset()</code>; or</p>
+</li>
+<li><p class="first">Call the <code class="notranslate">setCharset()</code> method on the message or the MIME part:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Approach 1: Change the global setting (suggested)</span>
+<span class="nx">Swift_Preferences</span><span class="o">::</span><span class="na">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">setCharset</span><span class="p">(</span><span class="s1">&#39;iso-8859-2&#39;</span><span class="p">);</span>
+
+<span class="c1">// Approach 2: Call the setCharset() method of the message</span>
+<span class="nv">$message</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Swift_Message</span><span class="p">())</span>
+  <span class="o">-&gt;</span><span class="na">setCharset</span><span class="p">(</span><span class="s1">&#39;iso-8859-2&#39;</span><span class="p">);</span>
+
+<span class="c1">// Approach 3: Specify the charset when setting the body</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="s1">&#39;My body&#39;</span><span class="p">,</span> <span class="s1">&#39;text/html&#39;</span><span class="p">,</span> <span class="s1">&#39;iso-8859-2&#39;</span><span class="p">);</span>
+
+<span class="c1">// Approach 4: Specify the charset for each part added</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">addPart</span><span class="p">(</span><span class="s1">&#39;My part&#39;</span><span class="p">,</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">,</span> <span class="s1">&#39;iso-8859-2&#39;</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div></div>
+</li>
+</ul>
+</div>
+<div class="section" id="setting-the-line-length">
+<h2>Setting the Line Length<a class="headerlink" href="#setting-the-line-length" title="Permalink to this headline">¶</a></h2>
+<p>The length of lines in a message can be changed by using the
+<code class="notranslate">setMaxLineLength()</code> method on the message:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setMaxLineLength</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+</pre></div>
+</div></div>
+<p>Swift Mailer defaults to using 78 characters per line in a message. This is
+done for historical reasons and so that the message can be easily viewed in
+plain-text terminals</p>
+<p>Lines that are longer than the line length specified will be wrapped between
+words.</p>
+<div class="admonition-wrapper">
+<div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>
+<p class="last">You should never set a maximum length longer than 1000 characters
+according to RFC 2822. Doing so could have unspecified side-effects such
+as truncating parts of your message when it is transported between SMTP
+servers.</p>
+</div></div>
+</div>
+<div class="section" id="setting-the-message-priority">
+<h2>Setting the Message Priority<a class="headerlink" href="#setting-the-message-priority" title="Permalink to this headline">¶</a></h2>
+<p>You can change the priority of the message with <code class="notranslate">setPriority()</code>. Setting the
+priority will not change the way your email is sent -- it is purely an
+indicative setting for the recipient:</p>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="c1">// Indicate &quot;High&quot; priority</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setPriority</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div></div>
+<p>The priority of a message is an indication to the recipient what significance
+it has. Swift Mailer allows you to set the priority by calling the
+<code class="notranslate">setPriority</code> method. This method takes an integer value between 1 and 5:</p>
+<ul class="simple">
+<li><code class="notranslate">Swift_Mime_SimpleMessage::PRIORITY_HIGHEST</code>: 1</li>
+<li><code class="notranslate">Swift_Mime_SimpleMessage::PRIORITY_HIGH</code>: 2</li>
+<li><code class="notranslate">Swift_Mime_SimpleMessage::PRIORITY_NORMAL</code>: 3</li>
+<li><code class="notranslate">Swift_Mime_SimpleMessage::PRIORITY_LOW</code>: 4</li>
+<li><code class="notranslate">Swift_Mime_SimpleMessage::PRIORITY_LOWEST</code>: 5</li>
+</ul>
+<div class="literal-block notranslate"><div class="highlight-php"><div class="highlight"><pre><span></span><span class="c1">// Or use the constant to be more explicit</span>
+<span class="nv">$message</span><span class="o">-&gt;</span><span class="na">setPriority</span><span class="p">(</span><span class="nx">Swift_Mime_SimpleMessage</span><span class="o">::</span><span class="na">PRIORITY_HIGH</span><span class="p">);</span>
+</pre></div>
+</div></div>
+</div>
+</div>
+
+    </div>
+
+            <div class="navigation">
+                            <a accesskey="P" title="Introduction" href="introduction.html">
+                    &laquo;&nbsp;Introduction
+                </a>
+                        <span class="separator">|</span>                            <a accesskey="N" title="Message Headers" href="headers.html">
+                    Message Headers&nbsp;&raquo;
+                </a>
+                    </div>
+                      </div>
+              </div>
+          </div>
+
+          <div id="sidepanel">
+                  <div id="topicmap" class="supplementary secondary">
+        <div class="clearfix">
+            <p>&laquo;&nbsp;<a href="/docs/index.html">Table of Contents</a></p>
+
+            <div class="offline-docs">
+
+                You can download the documentation for offline reading:
+
+                <ul>
+                    <li><a id="book-pdf" href="/pdf/Swiftmailer.pdf"><img src="images/pdficon.png" alt="PDF" /></a></li>
+                    <li><a id="book-epub" href="/epub/Swiftmailer.epub"><img src="images/epubicon.png" alt="EPUB" /></a></li>
+                </ul>
+
+            </div>
+
+                            <div id="doc-toc" class="infobar-box">
+                    <h3>Chapter Table of Contents</h3>
+                    <ul>
+<li><a class="reference internal" href="#">Creating Messages</a><ul>
+<li><a class="reference internal" href="#quick-reference">Quick Reference</a></li>
+<li><a class="reference internal" href="#message-basics">Message Basics</a><ul>
+<li><a class="reference internal" href="#the-structure-of-a-message">The Structure of a Message</a></li>
+<li><a class="reference internal" href="#working-with-a-message-object">Working with a Message Object</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adding-content-to-your-message">Adding Content to Your Message</a><ul>
+<li><a class="reference internal" href="#setting-the-subject-line">Setting the Subject Line</a></li>
+<li><a class="reference internal" href="#setting-the-body-content">Setting the Body Content</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#attaching-files">Attaching Files</a><ul>
+<li><a class="reference internal" href="#attaching-existing-files">Attaching Existing Files</a></li>
+<li><a class="reference internal" href="#setting-the-filename">Setting the Filename</a></li>
+<li><a class="reference internal" href="#attaching-dynamic-content">Attaching Dynamic Content</a></li>
+<li><a class="reference internal" href="#changing-the-disposition">Changing the Disposition</a></li>
+<li><a class="reference internal" href="#embedding-inline-media-files">Embedding Inline Media Files</a><ul>
+<li><a class="reference internal" href="#embedding-existing-files">Embedding Existing Files</a></li>
+<li><a class="reference internal" href="#embedding-dynamic-content">Embedding Dynamic Content</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adding-recipients-to-your-message">Adding Recipients to Your Message</a><ul>
+<li><a class="reference internal" href="#setting-to-recipients">Setting <code class="notranslate">To:</code> Recipients</a></li>
+<li><a class="reference internal" href="#setting-cc-recipients">Setting <code class="notranslate">Cc:</code> Recipients</a></li>
+<li><a class="reference internal" href="#setting-bcc-recipients">Setting <code class="notranslate">Bcc:</code> Recipients</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#specifying-sender-details">Specifying Sender Details</a><ul>
+<li><a class="reference internal" href="#setting-the-from-address">Setting the <code class="notranslate">From:</code> Address</a></li>
+<li><a class="reference internal" href="#setting-the-sender-address">Setting the <code class="notranslate">Sender:</code> Address</a></li>
+<li><a class="reference internal" href="#setting-the-return-path-bounce-address">Setting the <code class="notranslate">Return-Path:</code> (Bounce) Address</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#signed-encrypted-message">Signed/Encrypted Message</a><ul>
+<li><a class="reference internal" href="#s-mime">S/MIME</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#requesting-a-read-receipt">Requesting a Read Receipt</a></li>
+<li><a class="reference internal" href="#setting-the-character-set">Setting the Character Set</a></li>
+<li><a class="reference internal" href="#setting-the-line-length">Setting the Line Length</a></li>
+<li><a class="reference internal" href="#setting-the-message-priority">Setting the Message Priority</a></li>
+</ul>
+</li>
+</ul>
+
+
+                    <h3>Table of Contents</h3>
+                    <ul>
+                        <li><a href="introduction.html">Introduction</a></li>
+                        <li><a href="messages.html">Creating Messages</a></li>
+                        <li><a href="headers.html">Message Headers</a></li>
+                        <li><a href="sending.html">Sending messages</a></li>
+                        <li><a href="plugins.html">Plugins</a></li>
+                        <li><a href="japanese.html">Japanese</a></li>
+                    </ul>
+                </div>
+            
+            <div class="infobar-box">
+                <h3>Questions &amp; Feedback</h3>
+                <div class="feedback">
+                    <p>
+                      <strong>Found a typo or an error?</strong><br />
+                      Open a <a href="https://github.com/swiftmailer/swiftmailer/issues">ticket</a>.
+                    </p>
+                    <p>
+                      <strong>Need support or have a technical question?</strong><br />
+                      Ask support on <a href="https://stackoverflow.com/">Stack Overflow</a>.
+                     </p>
+                </div>
+
+                <h3>License</h3>
+                <div id="license">
+                    <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" src="https://symfony.com/images/license.png" /></a>
+                    Swiftmailer <span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" rel="dc:type">documentation</span> is licensed under a
+                    Creative Commons Attribution-Share Alike 3.0
+                    Unported <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/">License</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+          </div>
+
+        <div id="footer">
+          <div id="footercontent">
+            
+            <div id="about">
+            </div>
+        
+        <div id="support">
+          
+          <dl class="getstarted">
+            <dt>Get Started</dt>
+            <dd>
+              <ul>
+                <li><a href="/download">Download</a></li>
+                <!--<li>Tutorials</li>-->
+                <li><a href="/docs/introduction.html">User Guide &amp; Book</a></li>
+              </ul>
+            </dd>
+          </dl>
+
+          <dl class="related">
+            <dt>Get Help</dt>
+            <dd>
+              <ul>
+                <li><a href="/docs/introduction.html">Documentation</a></li>
+                <li><a href="/bugs">Report a Bug</a></li>
+                <li><a href="https://groups.google.com/group/swiftmailer">Google Group</a></li>
+              </ul>
+            </dd>
+          </dl>
+
+            </div>
+            
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+    </div>
+  </body>
+</html>

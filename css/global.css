@@ -1,0 +1,525 @@
+/* Eric Meyer's White-space Reset */
+html, body, div, span,
+applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dd, dl, dt, li, ol, ul,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: inherit;
+  text-align: left;
+  vertical-align: baseline;
+}
+a img, :link img, :visited img {
+  border: 0;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+ol, ul {
+  list-style: none;
+}
+q:before, q:after,
+blockquote:before, blockquote:after {
+  content: "";
+}
+/* End White-space Reset */
+
+/* Overall Site Styles */
+body {
+  background: #111122;
+  font-family: 'Lucida Grande',sans-serif;
+  width: 100%;
+  float: left;
+}
+
+h1 {
+  clear: both;
+  font-size: 2em;
+  margin-bottom: 1em;
+}
+
+h2 {
+  clear: both;
+  font-size: 1.5em;
+  margin: 1em 0;
+}
+
+h3 {
+  clear: both;
+  font-size: 1.3em;
+  margin: 1em 0;
+}
+
+h4 {
+  clear: both;
+  font-size: 1.2em;
+  margin: 1em 0;
+}
+
+h5 {
+  clear: both;
+  font-size: 1.1em;
+  margin: 1em 0;
+}
+
+strong {
+  font-weight: bold;
+}
+
+ul, ol {
+  margin: 1em 0;
+}
+
+li {
+  margin-left: 4em;
+}
+
+ol ul {
+  list-style: circle;
+}
+
+p {
+  margin-bottom: 1em;
+}
+
+a {
+  color: #2a4fb7;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+samp, code, pre {
+  font-family: 'Monaco',monospace,courier;
+  font-size: 1.1em;
+}
+
+ol {
+  list-style: decimal;
+}
+
+pre {
+  padding: 1em;
+}
+
+br.clear {
+  display: block;
+  clear: both;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  margin: 1em 1em 2em 1em;
+  width: 90%;
+}
+
+table th, td {
+  padding: 2px;
+  border: 1px solid #aaa;
+}
+
+table th {
+  background: #eee;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+dl {
+  display: block;
+  margin-bottom: 1em;
+}
+
+dt {
+  display: block;
+  font-weight: bold;
+}
+
+dd {
+  display: block;
+  margin-bottom: 5px;
+}
+
+form {
+  display: block;
+  width: 90%;
+  float: left;
+  clear: both;
+  font-size: 1.1em;
+}
+
+form fieldset {
+  display: block;
+  padding: 10px 0;
+  clear: both;
+}
+
+form label {
+  width: 33%;
+  margin: 5px;
+  display: block;
+  float: left;
+  clear: left;
+}
+
+form label strong {
+  color: #2a4fb7;
+}
+
+form label .instruction {
+  display: block;
+  font-size: 0.8em;
+  color: #666;
+}
+
+form fieldset.radios,
+form fieldset.checkboxes,
+form .forminput {
+  display: block;
+  float: right;
+  clear: none;
+  padding: 2px;
+  margin: 5px;
+  width: 51%;
+}
+
+form fieldset.radios label,
+form fieldset.checkboxes label {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+}
+
+form fieldset.buttons {
+  padding: 20px 0;
+}
+
+form fieldset.buttons input.button {
+  border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  padding: 3px;
+  border: 1px solid #fff;
+  float: right;
+  margin: 0 10px;
+}
+
+form fieldset.buttons input.primary {
+  text-transform: uppercase;
+  background: #2a4fb7;
+  color: #fff;
+}
+
+form fieldset.buttons input.secondary {
+  text-transform: uppercase;
+  background: #ccc;
+  color: #666;
+}
+
+form input,
+form textarea {
+  margin: 5px;
+  font-size: 1.1em;
+}
+
+form input.text {
+  display: block;
+  float: right;
+  width: 50%;
+  border: 1px solid #888;
+  padding: 2px;
+  font-family: 'Lucida Grande', Trebuchet;
+}
+
+form textarea.textarea {
+  display: block;
+  float: right;
+  width: 50%;
+  border: 1px solid #888;
+  padding: 2px;
+  font-family: 'Lucida Grande', Trebuchet;
+  font-size: 0.8em;
+}
+
+.errors {
+  margin: 20px 0;
+  background: #cc8888;
+  border: 1px solid #881111;
+  color: #441111;
+  padding: 10px;
+}
+
+.notifications {
+  margin: 20px 0;
+  background: #a2ea47;
+  color: #111;
+  padding: 10px;
+}
+
+.notifications li {
+  margin-left: 0;
+  font-weight: bold;
+}
+
+#layoutcontainer {
+  padding: 40px 40px 0 40px;
+}
+
+#layout {
+  float: left;
+  width: 100%;
+  padding: 0 0 40px 0;
+}
+
+#header {
+  background: transparent url(../images/header-bg-texture.png);
+}
+
+#headercontent {
+  height: 235px;
+  background: transparent url(../images/header-swooshlines.png) top right no-repeat;
+}
+
+#logo {
+  margin: 20px 15px 0 0;
+  float: right;
+}
+
+#navigation {
+  float: right;
+  position: relative;
+  top: 215px;
+  left: 181px;
+}
+
+#navigation ul {
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+
+#navigation li {
+  float: left;
+  padding: 0;
+  margin: 0;
+  margin-left: 1em;
+  line-height: 1em;
+}
+
+#navigation a {
+  font-size: 1em;
+  color: #fff;
+  text-decoration: none;
+}
+
+#navigation a:hover {
+  color: #99e934;
+}
+
+#navigation .tab {
+  background: #fff;
+  padding: 15px 10px 15px 10px;
+  color: #99e934;
+  font-size: 0.9em;
+  position: relative;
+  top: -15px;
+}
+
+#navigation .tab a {
+  color: #de5b0b;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#navigation .tab a:hover {
+  color: #de5b0b;
+}
+
+#wrapper {
+  float: left;
+  width: 100%;
+  margin: 8px 0 0 0;
+  background: #ffffff;
+}
+
+#container {
+    float: left;
+    width: 77%;
+}
+
+#content {
+  padding: 15px;
+  color: #222;
+  line-height: 1.4em;
+  font-size: 0.8em;
+}
+
+#content p {
+  text-align: justify;
+}
+
+#sidepanel {
+  float: right;
+  width: 23%;
+}
+
+#sidepanel .supplementary {
+  margin: 15px 15px 15px 0;
+  padding: 15px;
+  background: #eee;
+}
+
+#sidepanel .supplementary.secondary {
+  background: #fff;
+}
+
+#sidepanel .supplementary.iconbox img {
+  float: left;
+  margin-right: 15px;
+}
+
+#sidepanel .supplementary.iconbox dl {
+  height: 64px;
+  padding-left: 15px;
+  margin-bottom: 0;
+}
+
+#sidepanel .supplementary.iconbox dt {
+  display: block;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+#sidepanel .supplementary.iconbox dt a {
+  color: #222;
+  text-decoration: none;
+}
+
+#sidepanel .supplementary.iconbox dt a:hover {
+  text-decoration: underline;
+}
+
+#sidepanel .supplementary.iconbox dd {
+  display: block;
+  padding-top: 4px;
+  margin-bottom: 0;
+  font-size: 0.8em;
+  color: #666;
+}
+
+#sidepanel .supplementary h2 {
+  padding: 0;
+  margin: 0;
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+#sidepanel .supplementary p {
+  line-height: 1.5em;
+  font-size: 0.8em;
+}
+
+#sidepanel .supplementary ul {
+  line-height: 1.5em;
+  font-size: 0.8em;
+  list-style: disc;
+}
+
+#footer {
+  float: left;
+  clear: both;
+  width: 100%;
+  font-size: 0.8em;
+  color: #444;
+  line-height: 1.6em;
+}
+
+#footer a {
+  color: #444;
+}
+
+#footer a:hover {
+  text-decoration: none;
+}
+
+#footercontent {
+  margin: 15px;
+  padding: 15px 0;
+  border-top: 2px solid #ddd;
+}
+
+#footer #about {
+  float: left;
+}
+
+#footer #support {
+  float: right;
+}
+
+#footer dl {
+  display: block;
+  float: left;
+  padding: 0 0 20px 20px;
+}
+
+#footer dl dt {
+  display: block;
+  font-weight: bold;
+  padding: 2px 0;
+}
+
+#footer dl dd  {
+  display: block;
+  padding: 2px 0;
+}
+
+#footer ul, #footer li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.corners.top.right.bottom.left {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.corners.top.right {
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.corners.top.left {
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.corners.bottom.right {
+  -moz-border-radius-bottomright: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.corners.bottom.left {
+  -moz-border-radius-bottomleft: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
