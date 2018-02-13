@@ -13,4 +13,4 @@ Swift Mailer интегрируется в любые веб-приложени�
 Оригинальную английскую документацию можно прочесть на сайте `swiftmailer.org`_ или `GitHub`_.
 
 .. _`GitHub`: https://github.com/swiftmailer/swiftmailer/tree/master/doc
-.. _`swiftmailer.org`: http://swiftmailer.org
+.. _`swiftmailer.org`: https://swiftmailer.symfony.com/
