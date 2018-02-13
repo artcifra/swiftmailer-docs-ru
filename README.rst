@@ -1,24 +1,19 @@
-Русская документация Swift Mailer
+Бесплатная многофункциональная PHP библиотека для передачи электронной почты
 =================================
 
-Swift Mailer — это бесплатная многофункциональная библиотека для передачи электронной почты.
-Интегрируется в любые веб-приложения, написанные на PHP 5. Это гибкий и элегантный объектно-ориентированный подход к отправке писем с множеством функций.
+Swift Mailer интегрируется в любые веб-приложения, написанные на PHP 5. Это гибкий и элегантный объектно-ориентированный подход к отправке писем с множеством функций.
 
 Оригинальную английскую документацию можно прочесть на сайте `swiftmailer.org`_ или `GitHub`_.
 
 Краткое содержание
 ------------------
 
-* `Введение </doc/introduction.rst>`_
-* `Обзор библиотеки </doc/overview.rst>`_
-* `Установка библиотеки </doc/installing.rst>`_
-* `Получение помощи </doc/help-resources.rst>`_
-* `Подключение </doc/including-files.rst>`_
-* `Создание сообщений </doc/messages.rst>`_
-* `Заголовки сообщения </doc/headers.rst>`_
-* `Отправка сообщений </doc/sending.rst>`_
-* `Плагины </doc/plugins.rst>`_
-* `Японский язык </doc/japanese.rst>`_
+* Send emails using SMTP, sendmail, postfix or a custom Transport implementation of your own
+* Support servers that require username & password and/or encryption
+* Protect from header injection attacks without stripping request data content
+* Send MIME compliant HTML/multipart emails
+* Use event-driven plugins to customize the library
+* Handle large attachments and inline/embedded images with low memory use
 
 .. _`GitHub`: https://github.com/swiftmailer/swiftmailer/tree/master/doc
 .. _`swiftmailer.org`: http://swiftmailer.org
